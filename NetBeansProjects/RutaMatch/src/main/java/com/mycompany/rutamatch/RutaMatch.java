@@ -3,7 +3,7 @@
  */
 
 package com.mycompany.rutamatch;
-
+import com.mycompany.rutamatch.view.GUIPrincipal;
 /**
  *
  * @author yarit
@@ -11,6 +11,9 @@ package com.mycompany.rutamatch;
 public class RutaMatch {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+       System.out.println("Hello World!");
+
+        GUIPrincipal gui = new GUIPrincipal();
+        gui.setVisible(true);
     }
 }
