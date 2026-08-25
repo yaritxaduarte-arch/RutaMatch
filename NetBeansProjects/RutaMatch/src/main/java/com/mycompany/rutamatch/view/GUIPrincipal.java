@@ -27,6 +27,8 @@ public class GUIPrincipal extends javax.swing.JFrame {
         // Vuelve a registrar los paneles con un nombre para poder mostrarlos
         mainFrame.add(LoginPanel, "login");
         mainFrame.add(panelSignUp, "signup");
+        mainFrame.add(PanelPassanger, "home");
+        HeaderPanel.setVisible(false);
 
         // Cuál se ve al arrancar
         cardLayout.show(mainFrame, "login");
@@ -44,6 +46,12 @@ public class GUIPrincipal extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
+        HeaderPanel = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        panelHeaderRight = new javax.swing.JPanel();
+        cmbMode = new javax.swing.JComboBox<>();
+        lblUser = new javax.swing.JLabel();
+        BtnLogout = new javax.swing.JButton();
         mainFrame = new javax.swing.JPanel();
         LoginPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -67,11 +75,16 @@ public class GUIPrincipal extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         TxtPasswordSignUp = new javax.swing.JTextField();
         BtnSignUp1 = new javax.swing.JButton();
-        PanelHome = new javax.swing.JPanel();
+        PanelPassanger = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
+        PanelPassangerHome = new javax.swing.JPanel();
+        PanelFindTrip = new javax.swing.JPanel();
+        PanelPassangerBookings = new javax.swing.JPanel();
+        PanelDriver = new javax.swing.JPanel();
+        jTabbedPane2 = new javax.swing.JTabbedPane();
+        PanelDriverHome = new javax.swing.JPanel();
+        PanelDriverPublishTrip = new javax.swing.JPanel();
+        PanelDriverVehicles = new javax.swing.JPanel();
 
         jInternalFrame1.setVisible(true);
 
@@ -93,6 +106,25 @@ public class GUIPrincipal extends javax.swing.JFrame {
         jMenuBar1.add(jMenu2);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        HeaderPanel.setLayout(new java.awt.BorderLayout());
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel11.setText("Ruta Match");
+        HeaderPanel.add(jLabel11, java.awt.BorderLayout.CENTER);
+
+        cmbMode.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Passenger ", "Driver" }));
+        cmbMode.addActionListener(this::cmbModeActionPerformed);
+        panelHeaderRight.add(cmbMode);
+
+        lblUser.setText("Yaritxa");
+        panelHeaderRight.add(lblUser);
+
+        BtnLogout.setText("Log Out");
+        BtnLogout.addActionListener(this::BtnLogoutActionPerformed);
+        panelHeaderRight.add(BtnLogout);
+
+        HeaderPanel.add(panelHeaderRight, java.awt.BorderLayout.PAGE_END);
 
         jLabel1.setFont(new java.awt.Font("SansSerif", 0, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 204, 153));
@@ -237,7 +269,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                                     .addComponent(TxtNameSignUp, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(TxtEmailSignUp, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(TxtPasswordSignUp, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(556, Short.MAX_VALUE))
+                .addContainerGap(713, Short.MAX_VALUE))
         );
         panelSignUpLayout.setVerticalGroup(
             panelSignUpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -268,54 +300,109 @@ public class GUIPrincipal extends javax.swing.JFrame {
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.LEFT);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 433, Short.MAX_VALUE)
+        javax.swing.GroupLayout PanelPassangerHomeLayout = new javax.swing.GroupLayout(PanelPassangerHome);
+        PanelPassangerHome.setLayout(PanelPassangerHomeLayout);
+        PanelPassangerHomeLayout.setHorizontalGroup(
+            PanelPassangerHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 431, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        PanelPassangerHomeLayout.setVerticalGroup(
+            PanelPassangerHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 290, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Home", jPanel1);
+        jTabbedPane1.addTab("Home", PanelPassangerHome);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 433, Short.MAX_VALUE)
+        javax.swing.GroupLayout PanelFindTripLayout = new javax.swing.GroupLayout(PanelFindTrip);
+        PanelFindTrip.setLayout(PanelFindTripLayout);
+        PanelFindTripLayout.setHorizontalGroup(
+            PanelFindTripLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 431, Short.MAX_VALUE)
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        PanelFindTripLayout.setVerticalGroup(
+            PanelFindTripLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 290, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Buscar Rutas", jPanel3);
+        jTabbedPane1.addTab("Find a Trip", PanelFindTrip);
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 433, Short.MAX_VALUE)
+        javax.swing.GroupLayout PanelPassangerBookingsLayout = new javax.swing.GroupLayout(PanelPassangerBookings);
+        PanelPassangerBookings.setLayout(PanelPassangerBookingsLayout);
+        PanelPassangerBookingsLayout.setHorizontalGroup(
+            PanelPassangerBookingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 431, Short.MAX_VALUE)
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        PanelPassangerBookingsLayout.setVerticalGroup(
+            PanelPassangerBookingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 290, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("", jPanel4);
+        jTabbedPane1.addTab("\tMy Bookings", PanelPassangerBookings);
 
-        javax.swing.GroupLayout PanelHomeLayout = new javax.swing.GroupLayout(PanelHome);
-        PanelHome.setLayout(PanelHomeLayout);
-        PanelHomeLayout.setHorizontalGroup(
-            PanelHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout PanelPassangerLayout = new javax.swing.GroupLayout(PanelPassanger);
+        PanelPassanger.setLayout(PanelPassangerLayout);
+        PanelPassangerLayout.setHorizontalGroup(
+            PanelPassangerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
-        PanelHomeLayout.setVerticalGroup(
-            PanelHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        PanelPassangerLayout.setVerticalGroup(
+            PanelPassangerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        jTabbedPane2.setTabPlacement(javax.swing.JTabbedPane.LEFT);
+
+        javax.swing.GroupLayout PanelDriverHomeLayout = new javax.swing.GroupLayout(PanelDriverHome);
+        PanelDriverHome.setLayout(PanelDriverHomeLayout);
+        PanelDriverHomeLayout.setHorizontalGroup(
+            PanelDriverHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 327, Short.MAX_VALUE)
+        );
+        PanelDriverHomeLayout.setVerticalGroup(
+            PanelDriverHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 290, Short.MAX_VALUE)
+        );
+
+        jTabbedPane2.addTab("Home", PanelDriverHome);
+
+        javax.swing.GroupLayout PanelDriverPublishTripLayout = new javax.swing.GroupLayout(PanelDriverPublishTrip);
+        PanelDriverPublishTrip.setLayout(PanelDriverPublishTripLayout);
+        PanelDriverPublishTripLayout.setHorizontalGroup(
+            PanelDriverPublishTripLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 327, Short.MAX_VALUE)
+        );
+        PanelDriverPublishTripLayout.setVerticalGroup(
+            PanelDriverPublishTripLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 290, Short.MAX_VALUE)
+        );
+
+        jTabbedPane2.addTab("Publish Trip", PanelDriverPublishTrip);
+
+        javax.swing.GroupLayout PanelDriverVehiclesLayout = new javax.swing.GroupLayout(PanelDriverVehicles);
+        PanelDriverVehicles.setLayout(PanelDriverVehiclesLayout);
+        PanelDriverVehiclesLayout.setHorizontalGroup(
+            PanelDriverVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 327, Short.MAX_VALUE)
+        );
+        PanelDriverVehiclesLayout.setVerticalGroup(
+            PanelDriverVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 290, Short.MAX_VALUE)
+        );
+
+        jTabbedPane2.addTab("My Vehicles", PanelDriverVehicles);
+
+        javax.swing.GroupLayout PanelDriverLayout = new javax.swing.GroupLayout(PanelDriver);
+        PanelDriver.setLayout(PanelDriverLayout);
+        PanelDriverLayout.setHorizontalGroup(
+            PanelDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelDriverLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jTabbedPane2)
+                .addContainerGap())
+        );
+        PanelDriverLayout.setVerticalGroup(
+            PanelDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPane2)
         );
 
         javax.swing.GroupLayout mainFrameLayout = new javax.swing.GroupLayout(mainFrame);
@@ -334,13 +421,18 @@ public class GUIPrincipal extends javax.swing.JFrame {
             .addGroup(mainFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainFrameLayout.createSequentialGroup()
                     .addGap(190, 190, 190)
-                    .addComponent(PanelHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(PanelPassanger, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(191, Short.MAX_VALUE)))
+            .addGroup(mainFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainFrameLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(PanelDriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         mainFrameLayout.setVerticalGroup(
             mainFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainFrameLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(238, Short.MAX_VALUE)
                 .addComponent(panelSignUp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(mainFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -351,8 +443,13 @@ public class GUIPrincipal extends javax.swing.JFrame {
             .addGroup(mainFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainFrameLayout.createSequentialGroup()
                     .addGap(128, 128, 128)
-                    .addComponent(PanelHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(PanelPassanger, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(128, Short.MAX_VALUE)))
+            .addGroup(mainFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainFrameLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(PanelDriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -363,6 +460,11 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 .addGap(3, 3, 3)
                 .addComponent(mainFrame, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(3, 3, 3))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(408, 408, 408)
+                    .addComponent(HeaderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(447, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -370,6 +472,11 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 .addGap(3, 3, 3)
                 .addComponent(mainFrame, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(3, 3, 3))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(226, 226, 226)
+                    .addComponent(HeaderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(310, Short.MAX_VALUE)))
         );
 
         pack();
@@ -384,7 +491,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_TxtEmailSignIn1ActionPerformed
 
     private void BtnSignInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSignInActionPerformed
-        cardLayout.show(mainFrame, "login");
+
         String email = TxtEmailSignIn1.getText().trim();
         String password = TxtPasswordSignIn.getText().trim();
 
@@ -449,6 +556,14 @@ public class GUIPrincipal extends javax.swing.JFrame {
     }
     }//GEN-LAST:event_BtnSignUp1ActionPerformed
 
+    private void BtnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLogoutActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BtnLogoutActionPerformed
+
+    private void cmbModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbModeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbModeActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -475,20 +590,31 @@ public class GUIPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnLogout;
     private javax.swing.JButton BtnSignIn;
     private javax.swing.JButton BtnSignUp;
     private javax.swing.JButton BtnSignUp1;
+    private javax.swing.JPanel HeaderPanel;
     private javax.swing.JPanel LoginPanel;
-    private javax.swing.JPanel PanelHome;
+    private javax.swing.JPanel PanelDriver;
+    private javax.swing.JPanel PanelDriverHome;
+    private javax.swing.JPanel PanelDriverPublishTrip;
+    private javax.swing.JPanel PanelDriverVehicles;
+    private javax.swing.JPanel PanelFindTrip;
+    private javax.swing.JPanel PanelPassanger;
+    private javax.swing.JPanel PanelPassangerBookings;
+    private javax.swing.JPanel PanelPassangerHome;
     private javax.swing.JTextField TxtEmailSignIn1;
     private javax.swing.JTextField TxtEmailSignUp;
     private javax.swing.JTextField TxtNameSignUp;
     private javax.swing.JTextField TxtPasswordSignIn;
     private javax.swing.JTextField TxtPasswordSignUp;
     private javax.swing.JTextField TxtPhoneSignUp;
+    private javax.swing.JComboBox<String> cmbMode;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -500,12 +626,12 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JLabel lblUser;
     private javax.swing.JPanel mainFrame;
+    private javax.swing.JPanel panelHeaderRight;
     private javax.swing.JPanel panelSignUp;
     // End of variables declaration//GEN-END:variables
 }
