@@ -8,7 +8,7 @@ package com.mycompany.rutamatch.modelo;
  *
  * @author yarit
  */
-public class Usuario {
+public  abstract class Usuario {
     private int idUsuario; 
     private String nombre;
     private String correo;
