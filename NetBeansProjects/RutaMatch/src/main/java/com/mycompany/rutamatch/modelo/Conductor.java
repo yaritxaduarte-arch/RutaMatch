@@ -7,6 +7,8 @@ package com.mycompany.rutamatch.modelo;
  
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalTime;
+import java.util.Date;  
 
 
 /**
@@ -50,4 +52,25 @@ public class Conductor extends Usuario{
     public void setViajesPublicados(List<Viaje> viajesPublicados) {
         this.viajesPublicados = viajesPublicados;
     }
+    
+    public Viaje publicarViaje(
+        int idViaje,
+        Date fecha,
+        LocalTime hora,
+        int cuposDisponibles,
+        Vehiculo vehiculo) {
+
+    Viaje viaje = new Viaje(
+            idViaje,
+            fecha,
+            hora,
+            cuposDisponibles,
+            this,
+            vehiculo
+    );
+
+    viajesPublicados.add(viaje);
+
+    return viaje;
+}
 }
