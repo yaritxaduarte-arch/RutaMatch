@@ -4,73 +4,69 @@
  */
 package com.mycompany.rutamatch.modelo;
 
- 
-import java.util.ArrayList;
-import java.util.List;
-import java.time.LocalTime;
-import java.util.Date;  
-
-
 /**
  *
  * @author yarit
  */
-public class Conductor extends Usuario{
-    private int licencia;
+public class Conductor extends Persona {
     
-    private List<Vehiculo> vehiculos;
-    private List<Viaje> viajesPublicados;
-    
-    public Conductor(String estado, String nombre, String correo, 
-                String telefono, String contraseña,int idUsuario,int licencia)
-    { super(estado,contraseña, telefono, correo, nombre, idUsuario);
-    this.licencia = licencia;
-    this.vehiculos = new ArrayList<>();
-    this.viajesPublicados = new ArrayList<>();
-    }
-    public int getLicencia() {
-        return licencia;
-    }
+    private String licencia;
+    private String categoriaLicencia;
+    private String fechaVenciLicencia;
+    private Boolean estado;
+    // private Vehiculo vehiculo; 
 
-    public void setLicencia(int licencia) {
+    public Conductor(String id, String nombre, String apellido, String documento,
+            String tipoDocumento, String telefono, String correo,
+            String licencia, String categoriaLicencia, String fechaVenciLicencia) {
+        super(id, nombre, apellido, documento, tipoDocumento, telefono, correo);
         this.licencia = licencia;
+        this.categoriaLicencia = categoriaLicencia;
+        this.fechaVenciLicencia = fechaVenciLicencia;
+        this.estado = true;
+    }
+
+    public String getLicencia() { return licencia; }
+    public void setLicencia(String licencia) { this.licencia = licencia; }
+
+    public String getCategoriaLicencia() { return categoriaLicencia; }
+    public void setCategoriaLicencia(String categoriaLicencia) { this.categoriaLicencia = categoriaLicencia; }
+
+    public String getFechaVenciLicencia() { return fechaVenciLicencia; }
+    public void setFechaVenciLicencia(String fechaVenciLicencia) { this.fechaVenciLicencia = fechaVenciLicencia; }
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
+    }
+
+    
+    //public Vehiculo getVehiculo() { return vehiculo; }
+    //public void setVehiculo(Vehiculo vehiculo) { this.vehiculo = vehiculo; }
+    
+    public boolean validarConductor() {
+        return this.getNombre() != null &&
+                this.getApellido() != null &&
+                this.getTipoDocumento() != null &&
+                this.getDocumento() != null &&
+                this.getTelefono() != null &&
+                this.getCorreo() != null &&
+                this.getLicencia() != null &&
+                this.getCategoriaLicencia() != null &&
+                this.getFechaVenciLicencia() != null;
     }
     
-    
-    public List<Vehiculo> getVehiculos() {
-        return vehiculos;
+    @Override
+    public String toString() {
+        //String infoVehiculo = (vehiculo == null) ? "sin vehiculo asignado" : vehiculo.getPlaca();
+        String infoVehiculo = "sin vehiculo asignado";
+        return "Conductor [" + super.toString() +
+                ", licencia=" + licencia +
+                ", categoria=" + categoriaLicencia +
+                ", venceLicencia=" + fechaVenciLicencia +
+                ", vehiculo=" + infoVehiculo + "]";
     }
- 
-    public void setVehiculos(List<Vehiculo> vehiculos) {
-        this.vehiculos = vehiculos;
-    }
- 
-    public List<Viaje> getViajesPublicados() {
-        return viajesPublicados;
-    }
- 
-    public void setViajesPublicados(List<Viaje> viajesPublicados) {
-        this.viajesPublicados = viajesPublicados;
-    }
-    
-    public Viaje publicarViaje(
-        int idViaje,
-        Date fecha,
-        LocalTime hora,
-        int cuposDisponibles,
-        Vehiculo vehiculo) {
-
-    Viaje viaje = new Viaje(
-            idViaje,
-            fecha,
-            hora,
-            cuposDisponibles,
-            this,
-            vehiculo
-    );
-
-    viajesPublicados.add(viaje);
-
-    return viaje;
-}
 }

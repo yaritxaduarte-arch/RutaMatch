@@ -1,223 +1,82 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.mycompany.rutamatch.controller;
 
-import com.mycompany.rutamatch.modelo.Conductor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
+import com.mycompany.rutamatch.modelo.Conductor;
+import com.mycompany.rutamatch.modelo.IActualizable;
+
+/**
+ *
+ * @author yarit
+ */
 public class ControllerConductor {
+    
+    private static final List<Conductor> conductores = new ArrayList<>();
+    private static final List<IActualizable> guiActualiza = new ArrayList<>();
 
-    private final List<Conductor> conductores;
-
-    public ControllerConductor() {
-        conductores = new ArrayList<>();
-    }
-    public void crearConductor(Conductor conductor) {
-
-        try {
-            
-
-            if (conductor == null) {
-                throw new IllegalArgumentException(
-                        "El conductor no puede ser nulo."
-                );
-            }
-
-            if (conductor.getIdUsuario() <= 0) {
-                throw new IllegalArgumentException(
-                        "El ID del conductor debe ser mayor a cero."
-                );
-            }
-
-            if (buscarConductor(conductor.getIdUsuario()) != null) {
-                throw new IllegalArgumentException(
-                        "Ya existe un conductor con el ID: "
-                        + conductor.getIdUsuario()
-                );
-            }
-
-            if (conductor.getNombre() == null
-                    || conductor.getNombre().trim().isEmpty()) {
-
-                throw new IllegalArgumentException(
-                        "El nombre del conductor es obligatorio."
-                );
-            }
-
-            if (conductor.getCorreo() == null
-                    || conductor.getCorreo().trim().isEmpty()) {
-
-                throw new IllegalArgumentException(
-                        "El correo del conductor es obligatorio."
-                );
-            }
-
-            if (conductor.getLicencia() <= 0) {
-                throw new IllegalArgumentException(
-                        "La licencia del conductor debe ser válida."
-                );
-            }
-
-            conductores.add(conductor);
-
-        } catch (IllegalArgumentException e) {
-
-            throw e;
-
-        } catch (Exception e) {
-
-            throw new RuntimeException(
-                    "Ocurrió un error al crear el conductor.",
-                    e
-            );
+    public static void registrarGUI(IActualizable gui) {
+        if (gui != null && !guiActualiza.contains(gui)) {
+            guiActualiza.add(gui);
         }
     }
-    public List<Conductor> listarConductores() {
-
-        try {
-
-            return new ArrayList<>(conductores);
-
-        } catch (Exception e) {
-
-            throw new RuntimeException(
-                    "Ocurrió un error al obtener los conductores.",
-                    e
-            );
+    
+    public static void crearConductor(Conductor conductor) throws RuntimeException {
+        if (conductor == null || !conductor.validarConductor()) {
+            throw new RuntimeException("ERROR: ingrese los datos correctamente!");
+        }
+        if (buscarConductor(conductor.getId()) != null) {
+            throw new RuntimeException("ERROR: ya existe un conductor con el ID " + conductor.getId());
+        }
+        conductores.add(conductor);
+        actualizar();
+    }
+    
+    public static List<Conductor> listarConductores() {
+        return Collections.unmodifiableList(conductores);
+    }
+    
+    public static void eliminarConductor(String id) {
+        boolean eliminado = conductores.removeIf(c -> Objects.equals(c.getId(), id));
+        if (eliminado) {
+            actualizar();
+        } else {
+            throw new RuntimeException("No se encontró ningún usuario con ese ID.");
         }
     }
-    public Conductor buscarConductor(int idUsuario) {
-
-        try {
-
-            if (idUsuario <= 0) {
-                throw new IllegalArgumentException(
-                        "El ID debe ser mayor a cero."
-                );
+    
+    public static Conductor buscarConductor(String id) {
+        for (Conductor conductor : conductores) {
+            if (Objects.equals(conductor.getId(), id)) {
+                return conductor;
             }
-
-            for (Conductor conductor : conductores) {
-
-                if (conductor.getIdUsuario() == idUsuario) {
-                    return conductor;
-                }
-            }
-
-            return null;
-
-        } catch (IllegalArgumentException e) {
-
-            throw e;
-
-        } catch (Exception e) {
-
-            throw new RuntimeException(
-                    "Ocurrió un error al buscar el conductor.",
-                    e
-            );
         }
+        return null;
     }
-
-    public void actualizarConductor(Conductor conductorActualizado) {
-
-        try {
-
-            if (conductorActualizado == null) {
-                throw new IllegalArgumentException(
-                        "El conductor actualizado no puede ser nulo."
-                );
-            }
-
-            if (conductorActualizado.getIdUsuario() <= 0) {
-                throw new IllegalArgumentException(
-                        "El ID debe ser mayor a cero."
-                );
-            }
-
-            if (conductorActualizado.getNombre() == null
-                    || conductorActualizado.getNombre().trim().isEmpty()) {
-
-                throw new IllegalArgumentException(
-                        "El nombre del conductor es obligatorio."
-                );
-            }
-
-            if (conductorActualizado.getCorreo() == null
-                    || conductorActualizado.getCorreo().trim().isEmpty()) {
-
-                throw new IllegalArgumentException(
-                        "El correo del conductor es obligatorio."
-                );
-            }
-
-            if (conductorActualizado.getLicencia() <= 0) {
-                throw new IllegalArgumentException(
-                        "La licencia del conductor debe ser válida."
-                );
-            }
-
-            for (int i = 0; i < conductores.size(); i++) {
-
-                if (conductores.get(i).getIdUsuario()
-                        == conductorActualizado.getIdUsuario()) {
-
-                    conductores.set(i, conductorActualizado);
-                    return;
-                }
-            }
-
-            throw new IllegalArgumentException(
-                    "No existe un conductor con el ID: "
-                    + conductorActualizado.getIdUsuario()
-            );
-
-        } catch (IllegalArgumentException e) {
-
-            throw e;
-
-        } catch (Exception e) {
-
-            throw new RuntimeException(
-                    "Ocurrió un error al actualizar el conductor.",
-                    e
-            );
+    
+    public static void modificarConductor(Conductor conductorActualizado) {
+        if (conductorActualizado == null || !conductorActualizado.validarConductor()) {
+            throw new RuntimeException("ERROR: ingrese los datos correctamente!");
         }
+        for (int i = 0; i < conductores.size(); i++) {
+            if (Objects.equals(conductores.get(i).getId(), conductorActualizado.getId())) {
+                conductores.set(i, conductorActualizado);
+                actualizar();
+                return;
+            }
+        }
+        throw new RuntimeException("No se encontró ningún conductor con ese ID.");
     }
-
-
-    // =========================
-    // DELETE
-    // =========================
-    public void eliminarConductor(int idUsuario) {
-
-        try {
-
-            if (idUsuario <= 0) {
-                throw new IllegalArgumentException(
-                        "El ID debe ser mayor a cero."
-                );
-            }
-
-            Conductor conductor = buscarConductor(idUsuario);
-
-            if (conductor == null) {
-                throw new IllegalArgumentException(
-                        "No existe un conductor con el ID: "
-                        + idUsuario
-                );
-            }
-
-            conductores.remove(conductor);
-
-        } catch (IllegalArgumentException e) {
-
-            throw e;
-
-        } catch (Exception e) {
-
-            throw new RuntimeException(
-                    "Ocurrió un error al eliminar el conductor.",
-                    e
-            );
+    
+    public static void actualizar() {
+        for (IActualizable act : guiActualiza) {
+            act.actualizar();
         }
     }
 }
