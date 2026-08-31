@@ -1,20 +1,30 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.rutamatch.modelo;
 
-/**
- *
- * @author yarit
- */
-public class Pasajero extends Usuario {
-    
-    public Pasajero(String estado, String nombre, String correo, 
-                    String telefono, String contraseña, int idUsuario) 
-    {
-        super(estado, contraseña, telefono, correo, nombre, idUsuario);
+public class Pasajero extends Persona {
+    private String fechaRegistro;
+
+    public Pasajero(String nombre, String apellido, String documento, String tipoDocumento,
+                     String telefono, String correo, String id, String fechaRegistro) {
+        super(id, nombre, apellido, documento, tipoDocumento, telefono, correo);
+        this.fechaRegistro=fechaRegistro;
+    }
+
+    public String getFechaRegistro() { return fechaRegistro; }
+    public void setFechaRegistro(String fechaRegistro) { this.fechaRegistro = fechaRegistro; }
+
+    public boolean validarPasajero() { 
+        return getNombre() != null && !getNombre().isBlank()&&
+        getApellido() != null && !getApellido().isBlank() &&
+        getDocumento() != null && !getDocumento().isBlank() && 
+        getTipoDocumento() != null && !getTipoDocumento().isBlank() && 
+        getTelefono() != null && !getTelefono().isBlank() && 
+        getCorreo() != null && !getCorreo().isBlank() &&
+        getId() != null && !getId().isBlank() && 
+        getFechaRegistro() != null && !getFechaRegistro().isBlank();
+     }
+
+    @Override
+    public String toString() {
+        return "Pasajero [" + super.toString() + ", fechaRegistro=" + fechaRegistro + "]";
     }
 }
-
-
