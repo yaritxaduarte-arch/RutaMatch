@@ -1,7 +1,14 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.mycompany.rutamatch.modelo;
 
-public  abstract class  Usuario {
-    
+/**
+ *
+ * @author yarit
+ */
+public  abstract class Usuario {
     private int idUsuario; 
     private String nombre;
     private String correo;
@@ -12,7 +19,6 @@ public  abstract class  Usuario {
     public Usuario(String estado, String contraseña,
                    String telefono, String correo,
                    String nombre, int idUsuario) {
-        
         this.estado = estado;
         this.contraseña = contraseña;
         this.telefono = telefono;
@@ -70,10 +76,6 @@ public  abstract class  Usuario {
 
     public void setEstado(String estado) {
         this.estado = estado;
-    }
-
-    public boolean validarUsuario() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

@@ -1,63 +1,97 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.mycompany.rutamatch.modelo;
-import java.time.LocalDate;
 import java.time.LocalTime;
-
-public class Viaje<EstadoViaje> {
-
+import java.util.Date;
+ 
+/**
+ *
+ * @author yarit
+ */
+public class Viaje {
+    public enum EstadoDeViaje {
+    COMPLETO,
+    PUBLICADO,
+    FINALIZADO,
+    CANCELADO
+}
     private int idViaje;
-    private LocalDate fecha;
+    private Date fecha;
     private LocalTime hora;
     private int cuposDisponibles;
-    private EstadoViaje estado;
-
-    public Viaje(int idViaje, LocalDate fecha,
-                 LocalTime hora, int cuposDisponibles, EstadoViaje estado) {
-        
+    private EstadoDeViaje estado;
+ 
+    private Conductor conductor;
+    private Vehiculo vehiculo;
+ 
+ 
+    public Viaje(int idViaje, Date fecha, LocalTime hora, int cuposDisponibles,
+                 Conductor conductor, Vehiculo vehiculo) {
         this.idViaje = idViaje;
         this.fecha = fecha;
         this.hora = hora;
         this.cuposDisponibles = cuposDisponibles;
-        this.estado = estado;
-        
+        this.conductor = conductor;
+        this.vehiculo = vehiculo;
+        this.estado = EstadoDeViaje.PUBLICADO;
     }
-
+    
+    
     public int getIdViaje() {
         return idViaje;
     }
-
+ 
     public void setIdViaje(int idViaje) {
         this.idViaje = idViaje;
     }
-
-    public LocalDate getFecha() {
+ 
+    public Date getFecha() {
         return fecha;
     }
-
-    public void setFecha(LocalDate fecha) {
+ 
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
-
+ 
     public LocalTime getHora() {
         return hora;
     }
-
+ 
     public void setHora(LocalTime hora) {
         this.hora = hora;
     }
-
+ 
     public int getCuposDisponibles() {
         return cuposDisponibles;
     }
-
+ 
     public void setCuposDisponibles(int cuposDisponibles) {
         this.cuposDisponibles = cuposDisponibles;
     }
-
-    public EstadoViaje getEstado() {
+ 
+    public EstadoDeViaje getEstado() {
         return estado;
     }
-
-    public void setEstado(EstadoViaje estado) {
+ 
+    public void setEstado(EstadoDeViaje estado) {
         this.estado = estado;
+    }
+ 
+    public Conductor getConductor() {
+        return conductor;
+    }
+ 
+    public void setConductor(Conductor conductor) {
+        this.conductor = conductor;
+    }
+ 
+    public Vehiculo getVehiculo() {
+        return vehiculo;
+    }
+ 
+    public void setVehiculo(Vehiculo vehiculo) {
+        this.vehiculo = vehiculo;
     }
 }
