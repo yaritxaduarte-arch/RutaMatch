@@ -33,13 +33,16 @@ public class GUIPrincipal extends javax.swing.JFrame {
         TblVehicles.getColumnModel().getColumn(4).setCellRenderer(new com.mycompany.rutamatch.view.components.ButtonRenderer());
         TblVehicles.getColumnModel().getColumn(4).setMaxWidth(40);
         
-        TblListUsers.getColumnModel().getColumn(7).setCellRenderer(new com.mycompany.rutamatch.view.components.ButtonRenderer());
-        TblListUsers.getColumnModel().getColumn(7).setMaxWidth(40);
+        TblListUsers.getColumnModel().getColumn(9).setCellRenderer(new com.mycompany.rutamatch.view.components.ButtonRenderer());
+        TblListUsers.getColumnModel().getColumn(9).setMaxWidth(40);
+        
+        TblListPassanger.getColumnModel().getColumn(10).setCellRenderer(new com.mycompany.rutamatch.view.components.ButtonRenderer());
+        TblListPassanger.getColumnModel().getColumn(10).setMaxWidth(40);
         
         
 
         cargarDatosDePrueba();
-        
+        //vehiculos
         TableOptionsHelper.configurarClicOpciones(TblVehicles, 4,
                row -> { // Edit
         TxtChangePlate.setText(TblVehicles.getValueAt(row, 0).toString());
@@ -81,6 +84,40 @@ public class GUIPrincipal extends javax.swing.JFrame {
             "¿Seguro que quieres eliminar esta fila?", "Confirmar", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             ((javax.swing.table.DefaultTableModel) TblListUsers.getModel()).removeRow(row);
+        }
+    }
+);
+        //Pasagero
+      TableOptionsHelper.configurarClicOpciones(TblListPassanger, 9,
+        row -> { // Edit
+            TxtIDEditDriver.setText(TblListUsers.getValueAt(row, 0).toString());
+            TxtNameEditDriver.setText(TblListUsers.getValueAt(row, 1).toString());
+            TxtEmailEditDriver.setText(TblListUsers.getValueAt(row, 5).toString());
+            TxtPhoneEditDriver.setText(TblListUsers.getValueAt(row, 4).toString());
+            ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "EditDriver");
+            },
+            row -> { // Delete
+        int confirm = JOptionPane.showConfirmDialog(TblListPassanger,
+            "¿Seguro que quieres eliminar esta fila?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            ((javax.swing.table.DefaultTableModel) TblListPassanger.getModel()).removeRow(row);
+        }
+    }
+);
+        //Conductor
+      TableOptionsHelper.configurarClicOpciones(TblListDrivers, 9,
+        row -> { // Edit
+            TxtIDEditDriver.setText(TblListUsers.getValueAt(row, 0).toString());
+            TxtNameEditDriver.setText(TblListUsers.getValueAt(row, 1).toString());
+            TxtEmailEditDriver.setText(TblListUsers.getValueAt(row, 5).toString());
+            TxtPhoneEditDriver.setText(TblListUsers.getValueAt(row, 4).toString());
+            ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "EditDriver");
+            },
+            row -> { // Delete
+        int confirm = JOptionPane.showConfirmDialog(TblListDrivers,
+            "¿Seguro que quieres eliminar esta fila?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            ((javax.swing.table.DefaultTableModel) TblListDrivers.getModel()).removeRow(row);
         }
     }
 );
@@ -162,6 +199,15 @@ public class GUIPrincipal extends javax.swing.JFrame {
         jLabel54 = new javax.swing.JLabel();
         jLabel53 = new javax.swing.JLabel();
         PanelUsers = new javax.swing.JPanel();
+        PanelListPassanger = new javax.swing.JPanel();
+        jLabel56 = new javax.swing.JLabel();
+        jLabel57 = new javax.swing.JLabel();
+        TxtSearchTrips2 = new javax.swing.JTextField();
+        BtnSearchTrips2 = new javax.swing.JButton();
+        BtnAddTrips2 = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        TblListPassanger = new javax.swing.JTable();
+        jButton12 = new javax.swing.JButton();
         PanelListUser = new javax.swing.JPanel();
         jLabel42 = new javax.swing.JLabel();
         jLabel43 = new javax.swing.JLabel();
@@ -173,6 +219,15 @@ public class GUIPrincipal extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         TblListUsers = new javax.swing.JTable();
         jButton4 = new javax.swing.JButton();
+        PanelListDriver = new javax.swing.JPanel();
+        jLabel58 = new javax.swing.JLabel();
+        jLabel59 = new javax.swing.JLabel();
+        TxtSearchTrips3 = new javax.swing.JTextField();
+        BtnSearchTrips3 = new javax.swing.JButton();
+        BtnAddTrips3 = new javax.swing.JButton();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        TblListDrivers = new javax.swing.JTable();
+        jButton13 = new javax.swing.JButton();
         PanelAddDriver = new javax.swing.JPanel();
         jLabel49 = new javax.swing.JLabel();
         jLabel65 = new javax.swing.JLabel();
@@ -192,6 +247,10 @@ public class GUIPrincipal extends javax.swing.JFrame {
         TxtExpDateCreateDriver = new javax.swing.JTextField();
         jButton8 = new javax.swing.JButton();
         jLabel24 = new javax.swing.JLabel();
+        jLabel72 = new javax.swing.JLabel();
+        TxtDocumentTypeCreateDriver = new javax.swing.JTextField();
+        jLabel73 = new javax.swing.JLabel();
+        TxtDocumentCreateDriver = new javax.swing.JTextField();
         PanelEditPassenger = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
@@ -226,6 +285,10 @@ public class GUIPrincipal extends javax.swing.JFrame {
         TxtExpDateEditDriver = new javax.swing.JTextField();
         jButton9 = new javax.swing.JButton();
         jLabel26 = new javax.swing.JLabel();
+        jLabel74 = new javax.swing.JLabel();
+        jLabel75 = new javax.swing.JLabel();
+        TxtDocumentEditDriver = new javax.swing.JTextField();
+        TxtDocumentTypeEditDriver = new javax.swing.JTextField();
         PanelAddPassenger = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -388,7 +451,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JFXPanelLayout.createSequentialGroup()
-                .addContainerGap(409, Short.MAX_VALUE)
+                .addContainerGap(250, Short.MAX_VALUE)
                 .addGroup(JFXPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel52)
                     .addGroup(JFXPanelLayout.createSequentialGroup()
@@ -407,9 +470,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addGroup(JFXPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel53)
-                    .addGroup(JFXPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, 0)
-                        .addComponent(jLabel54, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel54, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(6959, Short.MAX_VALUE))
         );
 
@@ -427,6 +488,90 @@ public class GUIPrincipal extends javax.swing.JFrame {
         jTabbedPane1.addTab("Home", PanelHome);
 
         PanelUsers.setLayout(new java.awt.CardLayout());
+
+        jLabel56.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel56.setForeground(new java.awt.Color(0, 0, 51));
+        jLabel56.setText("Users / Passanger");
+
+        jLabel57.setText("Search: ");
+
+        BtnSearchTrips2.setText("Search");
+
+        BtnAddTrips2.setText("Add");
+        BtnAddTrips2.addActionListener(this::BtnAddTrips2ActionPerformed);
+
+        TblListPassanger.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "IDUser", "Name", "LastName", "Document", "DocumentType", "Phone", "Email", ""
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Integer.class, java.lang.String.class, java.lang.Object.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane5.setViewportView(TblListPassanger);
+        if (TblListPassanger.getColumnModel().getColumnCount() > 0) {
+            TblListPassanger.getColumnModel().getColumn(2).setHeaderValue("LastName");
+        }
+
+        jButton12.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton12.setText("<-- ");
+        jButton12.addActionListener(this::jButton12ActionPerformed);
+
+        javax.swing.GroupLayout PanelListPassangerLayout = new javax.swing.GroupLayout(PanelListPassanger);
+        PanelListPassanger.setLayout(PanelListPassangerLayout);
+        PanelListPassangerLayout.setHorizontalGroup(
+            PanelListPassangerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelListPassangerLayout.createSequentialGroup()
+                .addGroup(PanelListPassangerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelListPassangerLayout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addGroup(PanelListPassangerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel56, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(PanelListPassangerLayout.createSequentialGroup()
+                                .addComponent(jLabel57)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(TxtSearchTrips2, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(BtnSearchTrips2))))
+                    .addGroup(PanelListPassangerLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(PanelListPassangerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(BtnAddTrips2)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 774, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(118, Short.MAX_VALUE))
+        );
+        PanelListPassangerLayout.setVerticalGroup(
+            PanelListPassangerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelListPassangerLayout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(jButton12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel56)
+                .addGap(16, 16, 16)
+                .addGroup(PanelListPassangerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TxtSearchTrips2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BtnSearchTrips2)
+                    .addComponent(jLabel57))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(BtnAddTrips2)
+                .addGap(25, 25, 25))
+        );
+
+        PanelUsers.add(PanelListPassanger, "ListPassanger");
 
         jLabel42.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
         jLabel42.setForeground(new java.awt.Color(0, 0, 51));
@@ -447,17 +592,17 @@ public class GUIPrincipal extends javax.swing.JFrame {
 
         TblListUsers.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "IDUser", "Name", "LastName", "DocumentType", "Phone", "Email", "UserType", ""
+                "IDUser", "Name", "LastName", "Document", "DocumentType", "Phone", "Email", "UserType", ""
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -465,6 +610,9 @@ public class GUIPrincipal extends javax.swing.JFrame {
             }
         });
         jScrollPane4.setViewportView(TblListUsers);
+        if (TblListUsers.getColumnModel().getColumnCount() > 0) {
+            TblListUsers.getColumnModel().getColumn(2).setHeaderValue("LastName");
+        }
 
         jButton4.setText("All");
         jButton4.addActionListener(this::jButton4ActionPerformed);
@@ -474,28 +622,32 @@ public class GUIPrincipal extends javax.swing.JFrame {
         PanelListUserLayout.setHorizontalGroup(
             PanelListUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelListUserLayout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(PanelListUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel42, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelListUserLayout.createSequentialGroup()
-                        .addComponent(jLabel43)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(TxtSearchTrips1, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(BtnSearchTrips1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelListUserLayout.createSequentialGroup()
-                        .addComponent(jButton4)
-                        .addGap(41, 41, 41)
-                        .addComponent(jButton2)
-                        .addGap(41, 41, 41)
-                        .addComponent(jButton3)))
+                .addGroup(PanelListUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelListUserLayout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addGroup(PanelListUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel42, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelListUserLayout.createSequentialGroup()
+                                .addComponent(jLabel43)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(TxtSearchTrips1, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(BtnSearchTrips1))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelListUserLayout.createSequentialGroup()
+                                .addComponent(jButton4)
+                                .addGap(41, 41, 41)
+                                .addComponent(jButton2)
+                                .addGap(41, 41, 41)
+                                .addComponent(jButton3)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelListUserLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(BtnAddTrips1)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(PanelListUserLayout.createSequentialGroup()
-                .addContainerGap(79, Short.MAX_VALUE)
-                .addGroup(PanelListUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(BtnAddTrips1)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 658, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(332, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 792, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(100, Short.MAX_VALUE))
         );
         PanelListUserLayout.setVerticalGroup(
             PanelListUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -516,10 +668,90 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(BtnAddTrips1)
-                .addGap(25, 25, 25))
+                .addGap(87, 87, 87))
         );
 
         PanelUsers.add(PanelListUser, "ListUsers");
+
+        jLabel58.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel58.setForeground(new java.awt.Color(0, 0, 51));
+        jLabel58.setText("Users / Drivers");
+
+        jLabel59.setText("Search: ");
+
+        BtnSearchTrips3.setText("Search");
+
+        BtnAddTrips3.setText("Add");
+        BtnAddTrips3.addActionListener(this::BtnAddTrips3ActionPerformed);
+
+        TblListDrivers.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "Name", "Document", "DocumentType", "Phone", "Email", "Licence", "TypeLicence", "Expiration date", ""
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Integer.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane6.setViewportView(TblListDrivers);
+
+        jButton13.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton13.setText("<-- ");
+        jButton13.addActionListener(this::jButton13ActionPerformed);
+
+        javax.swing.GroupLayout PanelListDriverLayout = new javax.swing.GroupLayout(PanelListDriver);
+        PanelListDriver.setLayout(PanelListDriverLayout);
+        PanelListDriverLayout.setHorizontalGroup(
+            PanelListDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelListDriverLayout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addGroup(PanelListDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel58, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(PanelListDriverLayout.createSequentialGroup()
+                        .addComponent(jLabel59)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TxtSearchTrips3, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(BtnSearchTrips3)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(PanelListDriverLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(PanelListDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 840, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BtnAddTrips3))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        PanelListDriverLayout.setVerticalGroup(
+            PanelListDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelListDriverLayout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(jButton13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel58)
+                .addGap(16, 16, 16)
+                .addGroup(PanelListDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TxtSearchTrips3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BtnSearchTrips3)
+                    .addComponent(jLabel59))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(BtnAddTrips3)
+                .addContainerGap())
+        );
+
+        PanelUsers.add(PanelListDriver, "ListDriver");
 
         jLabel49.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
         jLabel49.setForeground(new java.awt.Color(0, 0, 51));
@@ -560,6 +792,12 @@ public class GUIPrincipal extends javax.swing.JFrame {
 
         jLabel24.setText("Please enter the data:");
 
+        jLabel72.setText("Document:");
+
+        jLabel73.setText("DocumentType:");
+
+        TxtDocumentCreateDriver.addActionListener(this::TxtDocumentCreateDriverActionPerformed);
+
         javax.swing.GroupLayout PanelAddDriverLayout = new javax.swing.GroupLayout(PanelAddDriver);
         PanelAddDriver.setLayout(PanelAddDriverLayout);
         PanelAddDriverLayout.setHorizontalGroup(
@@ -595,18 +833,26 @@ public class GUIPrincipal extends javax.swing.JFrame {
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(TxtIDCreateDriver))
                                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelAddDriverLayout.createSequentialGroup()
-                                            .addGroup(PanelAddDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(jLabel66)
-                                                .addComponent(jLabel65, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addComponent(jLabel73)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addGroup(PanelAddDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(TxtEmailCreateDriver, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(TxtNameCreateDriver, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addComponent(TxtDocumentTypeCreateDriver, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelAddDriverLayout.createSequentialGroup()
                                             .addComponent(jLabel67)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(TxtPhoneCreateDriver))))))
-                        .addGap(0, 697, Short.MAX_VALUE))))
+                                            .addComponent(TxtPhoneCreateDriver))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelAddDriverLayout.createSequentialGroup()
+                                            .addComponent(jLabel66)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(TxtEmailCreateDriver))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelAddDriverLayout.createSequentialGroup()
+                                            .addComponent(jLabel72)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(TxtDocumentCreateDriver))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelAddDriverLayout.createSequentialGroup()
+                                            .addComponent(jLabel65)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(TxtNameCreateDriver))))))
+                        .addGap(0, 491, Short.MAX_VALUE))))
         );
         PanelAddDriverLayout.setVerticalGroup(
             PanelAddDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -625,6 +871,14 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 .addGroup(PanelAddDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel65)
                     .addComponent(TxtNameCreateDriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(PanelAddDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TxtDocumentCreateDriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel72))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(PanelAddDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel73)
+                    .addComponent(TxtDocumentTypeCreateDriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(PanelAddDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel66)
@@ -714,7 +968,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(TxtEmailEditPass))
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(673, Short.MAX_VALUE))
+                .addContainerGap(514, Short.MAX_VALUE))
         );
         PanelEditPassengerLayout.setVerticalGroup(
             PanelEditPassengerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -791,48 +1045,62 @@ public class GUIPrincipal extends javax.swing.JFrame {
 
         jLabel26.setText("Please enter the data you want to change:");
 
+        jLabel74.setText("Document:");
+
+        jLabel75.setText("DocumentType:");
+
         javax.swing.GroupLayout PanelEditDriverLayout = new javax.swing.GroupLayout(PanelEditDriver);
         PanelEditDriver.setLayout(PanelEditDriverLayout);
         PanelEditDriverLayout.setHorizontalGroup(
             PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelEditDriverLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(BtnEditDriver)
-                    .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(PanelEditDriverLayout.createSequentialGroup()
-                                .addComponent(jLabel64)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TxtExpDateEditDriver))
-                            .addGroup(PanelEditDriverLayout.createSequentialGroup()
-                                .addComponent(jLabel63)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TxtLicenceTypeEditDriver))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelEditDriverLayout.createSequentialGroup()
-                                .addComponent(jLabel51)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TxtLicenceEditDriver))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelEditDriverLayout.createSequentialGroup()
-                                .addComponent(jLabel50)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TxtIDEditDriver))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelEditDriverLayout.createSequentialGroup()
-                                .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel47)
-                                    .addComponent(jLabel46, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(TxtEmailEditDriver, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(TxtNameEditDriver, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelEditDriverLayout.createSequentialGroup()
-                                .addComponent(jLabel48)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TxtPhoneEditDriver)))
-                        .addComponent(jLabel45, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 697, Short.MAX_VALUE))
+                .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(BtnEditDriver)
+                        .addGroup(PanelEditDriverLayout.createSequentialGroup()
+                            .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(PanelEditDriverLayout.createSequentialGroup()
+                                    .addComponent(jLabel64)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(TxtExpDateEditDriver, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE))
+                                .addGroup(PanelEditDriverLayout.createSequentialGroup()
+                                    .addComponent(jLabel75)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(TxtDocumentTypeEditDriver))
+                                .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel45, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(PanelEditDriverLayout.createSequentialGroup()
+                                    .addComponent(jLabel74)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(TxtDocumentEditDriver))
+                                .addGroup(PanelEditDriverLayout.createSequentialGroup()
+                                    .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jLabel47)
+                                        .addComponent(jLabel46, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(TxtNameEditDriver, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
+                                        .addComponent(TxtEmailEditDriver))))
+                            .addGap(10, 10, 10))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelEditDriverLayout.createSequentialGroup()
+                            .addComponent(jLabel48)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(TxtPhoneEditDriver, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelEditDriverLayout.createSequentialGroup()
+                            .addComponent(jLabel51)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(TxtLicenceEditDriver, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelEditDriverLayout.createSequentialGroup()
+                            .addComponent(jLabel63)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(TxtLicenceTypeEditDriver, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(PanelEditDriverLayout.createSequentialGroup()
+                        .addComponent(jLabel50)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TxtIDEditDriver, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 491, Short.MAX_VALUE))
         );
         PanelEditDriverLayout.setVerticalGroup(
             PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -851,6 +1119,14 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel46)
                     .addComponent(TxtNameEditDriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TxtDocumentEditDriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel74))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel75)
+                    .addComponent(TxtDocumentTypeEditDriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel47)
@@ -940,7 +1216,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(TxtEmailCreatePass))
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(673, Short.MAX_VALUE))
+                .addContainerGap(514, Short.MAX_VALUE))
         );
         PanelAddPassengerLayout.setVerticalGroup(
             PanelAddPassengerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1271,7 +1547,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
             PanelVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelVehiclesLayout.createSequentialGroup()
                 .addComponent(PanelHomeVehicles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 474, Short.MAX_VALUE))
+                .addGap(0, 315, Short.MAX_VALUE))
         );
         PanelVehiclesLayout.setVerticalGroup(
             PanelVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1349,11 +1625,11 @@ public class GUIPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnAddTrips1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "ListDriver");
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "ListPassanger");
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void TxtIDCreatePassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtIDCreatePassActionPerformed
@@ -1476,6 +1752,26 @@ public class GUIPrincipal extends javax.swing.JFrame {
         ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "ListUsers");
     }//GEN-LAST:event_jButton11ActionPerformed
 
+    private void BtnAddTrips2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAddTrips2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BtnAddTrips2ActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+        ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "ListUsers");
+    }//GEN-LAST:event_jButton12ActionPerformed
+
+    private void BtnAddTrips3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAddTrips3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BtnAddTrips3ActionPerformed
+
+    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+        ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "ListUsers");
+    }//GEN-LAST:event_jButton13ActionPerformed
+
+    private void TxtDocumentCreateDriverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtDocumentCreateDriverActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtDocumentCreateDriverActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1504,6 +1800,8 @@ public class GUIPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnAddCreateVehicles;
     private javax.swing.JButton BtnAddTrips1;
+    private javax.swing.JButton BtnAddTrips2;
+    private javax.swing.JButton BtnAddTrips3;
     private javax.swing.JButton BtnCreateDriver;
     private javax.swing.JButton BtnCreateUser;
     private javax.swing.JButton BtnCreateVehicle;
@@ -1512,6 +1810,8 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton BtnEditVehicles;
     private javax.swing.JButton BtnExit;
     private javax.swing.JButton BtnSearchTrips1;
+    private javax.swing.JButton BtnSearchTrips2;
+    private javax.swing.JButton BtnSearchTrips3;
     private javax.swing.JButton BtnSearchVehicles;
     private javax.swing.JPanel Header;
     private javax.swing.JPanel JFXPanel;
@@ -1523,10 +1823,14 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel PanelEditVehicles;
     private javax.swing.JPanel PanelHome;
     private javax.swing.JPanel PanelHomeVehicles;
+    private javax.swing.JPanel PanelListDriver;
+    private javax.swing.JPanel PanelListPassanger;
     private javax.swing.JPanel PanelListUser;
     private javax.swing.JPanel PanelListVehicles;
     private javax.swing.JPanel PanelUsers;
     private javax.swing.JPanel PanelVehicles;
+    private javax.swing.JTable TblListDrivers;
+    private javax.swing.JTable TblListPassanger;
     private javax.swing.JTable TblListUsers;
     private javax.swing.JTable TblVehicles;
     private javax.swing.JTextField TxtAddBrand;
@@ -1537,6 +1841,10 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField TxtChangeCapacity;
     private javax.swing.JTextField TxtChangeModel;
     private javax.swing.JTextField TxtChangePlate;
+    private javax.swing.JTextField TxtDocumentCreateDriver;
+    private javax.swing.JTextField TxtDocumentEditDriver;
+    private javax.swing.JTextField TxtDocumentTypeCreateDriver;
+    private javax.swing.JTextField TxtDocumentTypeEditDriver;
     private javax.swing.JTextField TxtEmailCreateDriver;
     private javax.swing.JTextField TxtEmailCreatePass;
     private javax.swing.JTextField TxtEmailEditDriver;
@@ -1562,10 +1870,14 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField TxtPhoneEditDriver;
     private javax.swing.JTextField TxtPhoneEditPass;
     private javax.swing.JTextField TxtSearchTrips1;
+    private javax.swing.JTextField TxtSearchTrips2;
+    private javax.swing.JTextField TxtSearchTrips3;
     private javax.swing.JTextField TxtSearchVehicles;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
+    private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -1618,6 +1930,10 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel53;
     private javax.swing.JLabel jLabel54;
     private javax.swing.JLabel jLabel55;
+    private javax.swing.JLabel jLabel56;
+    private javax.swing.JLabel jLabel57;
+    private javax.swing.JLabel jLabel58;
+    private javax.swing.JLabel jLabel59;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel63;
     private javax.swing.JLabel jLabel64;
@@ -1629,6 +1945,10 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel70;
     private javax.swing.JLabel jLabel71;
+    private javax.swing.JLabel jLabel72;
+    private javax.swing.JLabel jLabel73;
+    private javax.swing.JLabel jLabel74;
+    private javax.swing.JLabel jLabel75;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
@@ -1638,6 +1958,8 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
 }

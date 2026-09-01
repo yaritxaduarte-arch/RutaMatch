@@ -1,20 +1,19 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.rutamatch.modelo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author yarit
  */
 public class Conductor extends Persona {
-    
+
     private String licencia;
     private String categoriaLicencia;
     private String fechaVenciLicencia;
     private Boolean estado;
-    // private Vehiculo vehiculo; 
+    private List<Vehiculo> vehiculos;
 
     public Conductor(String id, String nombre, String apellido, String documento,
             String tipoDocumento, String telefono, String correo,
@@ -24,6 +23,7 @@ public class Conductor extends Persona {
         this.categoriaLicencia = categoriaLicencia;
         this.fechaVenciLicencia = fechaVenciLicencia;
         this.estado = true;
+        this.vehiculos = new ArrayList<>();
     }
 
     public String getLicencia() { return licencia; }
@@ -35,18 +35,33 @@ public class Conductor extends Persona {
     public String getFechaVenciLicencia() { return fechaVenciLicencia; }
     public void setFechaVenciLicencia(String fechaVenciLicencia) { this.fechaVenciLicencia = fechaVenciLicencia; }
 
-    public Boolean getEstado() {
-        return estado;
+    public Boolean getEstado() { return estado; }
+    public void setEstado(Boolean estado) { this.estado = estado; }
+
+    public List<Vehiculo> getVehiculos() {
+        return vehiculos;
     }
 
-    public void setEstado(Boolean estado) {
-        this.estado = estado;
+    // Setter "de reemplazo" completo de la lista (opcional, útil si cargas desde BD)
+    public void setVehiculos(List<Vehiculo> vehiculos) {
+        this.vehiculos = (vehiculos != null) ? vehiculos : new ArrayList<>();
     }
 
-    
-    //public Vehiculo getVehiculo() { return vehiculo; }
-    //public void setVehiculo(Vehiculo vehiculo) { this.vehiculo = vehiculo; }
-    
+    // Métodos para manejar la relación 0..N de forma más natural que un setter plano
+    public void agregarVehiculo(Vehiculo vehiculo) {
+        if (vehiculo != null && !this.vehiculos.contains(vehiculo)) {
+            this.vehiculos.add(vehiculo);
+        }
+    }
+
+    public boolean quitarVehiculo(Vehiculo vehiculo) {
+        return this.vehiculos.remove(vehiculo);
+    }
+
+    public boolean tieneVehiculos() {
+        return !this.vehiculos.isEmpty();
+    }
+
     public boolean validarConductor() {
         return this.getNombre() != null &&
                 this.getApellido() != null &&
@@ -58,15 +73,16 @@ public class Conductor extends Persona {
                 this.getCategoriaLicencia() != null &&
                 this.getFechaVenciLicencia() != null;
     }
-    
+
     @Override
     public String toString() {
-        //String infoVehiculo = (vehiculo == null) ? "sin vehiculo asignado" : vehiculo.getPlaca();
-        String infoVehiculo = "sin vehiculo asignado";
+        String infoVehiculos = this.vehiculos.isEmpty()
+                ? "sin vehiculos asignados"
+                : this.vehiculos.size() + " vehiculo(s) asignado(s)";
         return "Conductor [" + super.toString() +
                 ", licencia=" + licencia +
                 ", categoria=" + categoriaLicencia +
                 ", venceLicencia=" + fechaVenciLicencia +
-                ", vehiculo=" + infoVehiculo + "]";
+                ", vehiculos=" + infoVehiculos + "]";
     }
 }
