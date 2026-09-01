@@ -33,11 +33,14 @@ public class GUIPrincipal extends javax.swing.JFrame {
         TblVehicles.getColumnModel().getColumn(4).setCellRenderer(new com.mycompany.rutamatch.view.components.ButtonRenderer());
         TblVehicles.getColumnModel().getColumn(4).setMaxWidth(40);
         
-        TblListUsers.getColumnModel().getColumn(9).setCellRenderer(new com.mycompany.rutamatch.view.components.ButtonRenderer());
-        TblListUsers.getColumnModel().getColumn(9).setMaxWidth(40);
+        TblListUsers.getColumnModel().getColumn(8).setCellRenderer(new com.mycompany.rutamatch.view.components.ButtonRenderer());
+        TblListUsers.getColumnModel().getColumn(8).setMaxWidth(40);
         
-        TblListPassanger.getColumnModel().getColumn(10).setCellRenderer(new com.mycompany.rutamatch.view.components.ButtonRenderer());
-        TblListPassanger.getColumnModel().getColumn(10).setMaxWidth(40);
+        TblListPassanger.getColumnModel().getColumn(7).setCellRenderer(new com.mycompany.rutamatch.view.components.ButtonRenderer());
+        TblListPassanger.getColumnModel().getColumn(7).setMaxWidth(40);
+        
+        TblListDrivers.getColumnModel().getColumn(9).setCellRenderer(new com.mycompany.rutamatch.view.components.ButtonRenderer());
+        TblListDrivers.getColumnModel().getColumn(9).setMaxWidth(40);
         
         
 
@@ -87,15 +90,16 @@ public class GUIPrincipal extends javax.swing.JFrame {
         }
     }
 );
-        //Pasagero
-      TableOptionsHelper.configurarClicOpciones(TblListPassanger, 9,
+        //Pasajero
+      TableOptionsHelper.configurarClicOpciones(TblListPassanger, 7,
         row -> { // Edit
-            TxtIDEditDriver.setText(TblListUsers.getValueAt(row, 0).toString());
-            TxtNameEditDriver.setText(TblListUsers.getValueAt(row, 1).toString());
-            TxtEmailEditDriver.setText(TblListUsers.getValueAt(row, 5).toString());
-            TxtPhoneEditDriver.setText(TblListUsers.getValueAt(row, 4).toString());
-            ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "EditDriver");
-            },
+                TxtIDEditPass.setText(TblListUsers.getValueAt(row, 0).toString());
+            TxtNameEditPass.setText(TblListUsers.getValueAt(row, 1).toString());
+            TxtLastNameEditPass.setText(TblListUsers.getValueAt(row, 2).toString());
+            TxtEmailEditPass.setText(TblListUsers.getValueAt(row, 5).toString());
+            TxtPhoneEditPass.setText(TblListUsers.getValueAt(row, 4).toString());
+            ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "EditPassenger");
+        },
             row -> { // Delete
         int confirm = JOptionPane.showConfirmDialog(TblListPassanger,
             "¿Seguro que quieres eliminar esta fila?", "Confirmar", JOptionPane.YES_NO_OPTION);
