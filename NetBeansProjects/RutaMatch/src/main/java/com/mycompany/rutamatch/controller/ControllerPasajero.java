@@ -29,7 +29,7 @@ public class ControllerPasajero {
     }
     public static void crearPasajero(Pasajero pasajero) {
 
-        if (pasajero == null || !pasajero.validarPasajero()) {
+        if (pasajero == null || !pasajero.validarDatosPasajero()) {
             throw new RuntimeException(
                     "ERROR: ingrese los datos correctamente!"
             );
@@ -68,7 +68,7 @@ public class ControllerPasajero {
     public static void modificarPasajero(Pasajero pasajeroActualizado) {
 
         if (pasajeroActualizado == null
-                || !pasajeroActualizado.validarPasajero()) {
+                || !pasajeroActualizado.validarDatosPasajero()) {
 
             throw new RuntimeException(
                     "ERROR: ingrese los datos correctamente!"

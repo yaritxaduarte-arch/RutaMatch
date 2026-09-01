@@ -1,6 +1,11 @@
-
 package com.mycompany.rutamatch.view;
 
+import com.mycompany.rutamatch.controller.ControllerVehiculo;
+import com.mycompany.rutamatch.controller.ControllerConductor;
+import com.mycompany.rutamatch.controller.ControllerPasajero;
+import com.mycompany.rutamatch.modelo.Vehiculo;
+import com.mycompany.rutamatch.modelo.Pasajero;
+import com.mycompany.rutamatch.modelo.Conductor;
 import java.awt.CardLayout;
 import javax.swing.JOptionPane;
 import com.mycompany.rutamatch.view.components.ButtonRenderer;
@@ -14,8 +19,8 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import java.awt.BorderLayout;
-
-public class GUIPrincipal extends javax.swing.JFrame {
+import com.mycompany.rutamatch.modelo.IActualizable;
+public class GUIPrincipal extends javax.swing.JFrame implements IActualizable{
 
     private CardLayout cardLayout;
     //no se para que es pero claudia me dijo que lo pusiera para poder correrlo
@@ -30,104 +35,494 @@ public class GUIPrincipal extends javax.swing.JFrame {
         ((java.awt.CardLayout) PanelHomeVehicles.getLayout()).show(PanelHomeVehicles, "ListVehicles");
         ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "ListUsers");
         
-        TblVehicles.getColumnModel().getColumn(4).setCellRenderer(new com.mycompany.rutamatch.view.components.ButtonRenderer());
-        TblVehicles.getColumnModel().getColumn(4).setMaxWidth(40);
+        ControllerVehiculo.registrarGUI(this);
+        refrescarTablaVehiculos(ControllerVehiculo.listarVehiculos());
         
-        TblListUsers.getColumnModel().getColumn(8).setCellRenderer(new com.mycompany.rutamatch.view.components.ButtonRenderer());
-        TblListUsers.getColumnModel().getColumn(8).setMaxWidth(40);
+        ControllerConductor.registrarGUI(this);
+        //refrescarTablaConductor(ControllerConductor.listarConductor());
         
-        TblListPassanger.getColumnModel().getColumn(7).setCellRenderer(new com.mycompany.rutamatch.view.components.ButtonRenderer());
-        TblListPassanger.getColumnModel().getColumn(7).setMaxWidth(40);
-        
-        TblListDrivers.getColumnModel().getColumn(9).setCellRenderer(new com.mycompany.rutamatch.view.components.ButtonRenderer());
-        TblListDrivers.getColumnModel().getColumn(9).setMaxWidth(40);
-        
-        
+        ControllerPasajero.registrarGUI(this);
+        //refrescarTablaPasajero(ControllerPasajero.listarPasajero());
 
-        cargarDatosDePrueba();
-        //vehiculos
-        TableOptionsHelper.configurarClicOpciones(TblVehicles, 4,
-               row -> { // Edit
-        TxtChangePlate.setText(TblVehicles.getValueAt(row, 0).toString());
-        TxtChangeBrand.setText(TblVehicles.getValueAt(row, 1).toString());
-        TxtChangeModel.setText(TblVehicles.getValueAt(row, 2).toString());
-        TxtChangeCapacity.setText(TblVehicles.getValueAt(row, 3).toString());
-        ((java.awt.CardLayout) PanelHomeVehicles.getLayout()).show(PanelHomeVehicles, "EditVehicles");
-            },
-            row -> { // Delete
-        int confirm = JOptionPane.showConfirmDialog(TblVehicles,
-            "¿Seguro que quieres eliminar esta fila?", "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            ((javax.swing.table.DefaultTableModel) TblVehicles.getModel()).removeRow(row);
-        }
-    }
-);
-        //usuarios
-      TableOptionsHelper.configurarClicOpciones(TblListUsers, 7,
-    row -> { // Edit
-        String tipo = TblListUsers.getValueAt(row, 6).toString();
+        TblListUsers.getColumnModel().getColumn(7).setCellRenderer(new com.mycompany.rutamatch.view.components.ButtonRenderer());
+        TblListUsers.getColumnModel().getColumn(7).setMaxWidth(40);
+        
+}  
+    private void refrescarTablaUsuarios() {
+    javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
+        new String[]{
+            "ID", "Nombre", "Apellido", "Documento",
+            "Tipo Documento", "Teléfono", "Correo",
+            "Tipo Usuario", ""
+        }, 0) {
 
-        if (tipo.equalsIgnoreCase("Driver")) {
-            TxtIDEditDriver.setText(TblListUsers.getValueAt(row, 0).toString());
-            TxtNameEditDriver.setText(TblListUsers.getValueAt(row, 1).toString());
-            TxtEmailEditDriver.setText(TblListUsers.getValueAt(row, 5).toString());
-            TxtPhoneEditDriver.setText(TblListUsers.getValueAt(row, 4).toString());
-            ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "EditDriver");
-        } else {
-            TxtIDEditPass.setText(TblListUsers.getValueAt(row, 0).toString());
-            TxtNameEditPass.setText(TblListUsers.getValueAt(row, 1).toString());
-            TxtLastNameEditPass.setText(TblListUsers.getValueAt(row, 2).toString());
-            TxtEmailEditPass.setText(TblListUsers.getValueAt(row, 5).toString());
-            TxtPhoneEditPass.setText(TblListUsers.getValueAt(row, 4).toString());
-            ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "EditPassenger");
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
         }
-    },
-    row -> { // Delete
-        int confirm = JOptionPane.showConfirmDialog(TblListUsers,
-            "¿Seguro que quieres eliminar esta fila?", "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            ((javax.swing.table.DefaultTableModel) TblListUsers.getModel()).removeRow(row);
-        }
+    };
+
+    for (Conductor c : ControllerConductor.listarConductores()) {
+        modelo.addRow(new Object[]{
+            c.getId(),
+            c.getNombre(),
+            c.getApellido(),
+            c.getDocumento(),
+            c.getTipoDocumento(),
+            c.getTelefono(),
+            c.getCorreo(),
+            "Driver",
+            ""
+        });
     }
-);
-        //Pasajero
-      TableOptionsHelper.configurarClicOpciones(TblListPassanger, 7,
-        row -> { // Edit
-                TxtIDEditPass.setText(TblListUsers.getValueAt(row, 0).toString());
-            TxtNameEditPass.setText(TblListUsers.getValueAt(row, 1).toString());
-            TxtLastNameEditPass.setText(TblListUsers.getValueAt(row, 2).toString());
-            TxtEmailEditPass.setText(TblListUsers.getValueAt(row, 5).toString());
-            TxtPhoneEditPass.setText(TblListUsers.getValueAt(row, 4).toString());
-            ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "EditPassenger");
+
+    for (Pasajero p : ControllerPasajero.listarPasajeros()) {
+        modelo.addRow(new Object[]{
+            p.getId(),
+            p.getNombre(),
+            p.getApellido(),
+            p.getDocumento(),
+            p.getTipoDocumento(),
+            p.getTelefono(),
+            p.getCorreo(),
+            "Passenger",
+            ""
+        });
+    }
+
+    TblListUsers.setModel(modelo);
+    aplicarColumnaAccionesUsuarios();
+}
+
+@Override
+public void actualizar() {
+    refrescarTablaUsuarios();
+}
+
+private void aplicarColumnaAccionesUsuarios() {
+
+    TblListUsers.getColumnModel().getColumn(8).setCellRenderer(new ButtonRenderer());
+    TblListUsers.getColumnModel().getColumn(8).setMaxWidth(40);
+
+    TableOptionsHelper.configurarClicOpciones(
+        TblListUsers,
+        8,
+
+        row -> { // Editar
+
+            String tipo = TblListUsers.getValueAt(row, 7).toString();
+            String id = TblListUsers.getValueAt(row, 0).toString();
+
+            if (tipo.equalsIgnoreCase("Driver")) {
+
+                Conductor conductor = ControllerConductor.buscarConductor(id);
+
+                if (conductor != null) {
+                    TxtIDEditDriver.setText(conductor.getId());
+                    TxtNameEditDriver.setText(conductor.getNombre());
+                    TxtLastNameEditDriver.setText(conductor.getApellido());
+                    TxtDocumentEditDriver.setText(conductor.getDocumento());
+                    TxtDocumentTypeEditDriver.setText(conductor.getTipoDocumento());
+                    TxtPhoneEditDriver.setText(conductor.getTelefono());
+                    TxtEmailEditDriver.setText(conductor.getCorreo());
+
+                    TxtLicenceEditDriver.setText(conductor.getLicencia());
+                    TxtLicenceTypeEditDriver.setText(conductor.getCategoriaLicencia());
+                    TxtExpDateEditDriver.setText(conductor.getFechaVenciLicencia());
+
+                    TxtIDEditDriver.setEditable(false);
+
+                    ((java.awt.CardLayout) PanelUsers.getLayout())
+                            .show(PanelUsers, "EditDriver");
+                }
+
+            } else {
+
+                Pasajero pasajero = ControllerPasajero.buscarPasajero(id);
+
+                if (pasajero != null) {
+                    TxtIDEditPass.setText(pasajero.getId());
+                    TxtNameEditPass.setText(pasajero.getNombre());
+                    TxtLastNameEditPass.setText(pasajero.getApellido());
+                    TxtDocumentEditPass.setText(pasajero.getDocumento());
+                    TxtTypeDocumentEditPass.setText(pasajero.getTipoDocumento());
+                    TxtPhoneEditPass.setText(pasajero.getTelefono());
+                    TxtEmailEditPass.setText(pasajero.getCorreo());
+
+                    TxtDateRegisterEditPass.setText(pasajero.getFechaRegistro());
+
+                    TxtIDEditPass.setEditable(false);
+
+                    ((java.awt.CardLayout) PanelUsers.getLayout())
+                            .show(PanelUsers, "EditPassenger");
+                }
+            }
         },
-            row -> { // Delete
-        int confirm = JOptionPane.showConfirmDialog(TblListPassanger,
-            "¿Seguro que quieres eliminar esta fila?", "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            ((javax.swing.table.DefaultTableModel) TblListPassanger.getModel()).removeRow(row);
+
+        row -> { // Eliminar
+
+            String tipo = TblListUsers.getValueAt(row, 7).toString();
+            String id = TblListUsers.getValueAt(row, 0).toString();
+
+            int confirm = JOptionPane.showConfirmDialog(
+                TblListUsers,
+                "¿Seguro que quieres eliminar este usuario?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+
+                try {
+
+                    if (tipo.equalsIgnoreCase("Driver")) {
+                        ControllerConductor.eliminarConductor(id);
+                    } else {
+                        ControllerPasajero.eliminarPasajero(id);
+                    }
+
+                    JOptionPane.showMessageDialog(
+                        TblListUsers,
+                        "Usuario eliminado correctamente."
+                    );
+
+                } catch (RuntimeException ex) {
+
+                    JOptionPane.showMessageDialog(
+                        TblListUsers,
+                        ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
         }
+    );
+}
+    private void refrescarTablaConductores(java.util.List<Conductor> lista) {
+
+    javax.swing.table.DefaultTableModel modelo =
+        new javax.swing.table.DefaultTableModel(
+            new String[]{
+                "ID", "Nombre", "Apellido", "Documento",
+                "Tipo Documento", "Teléfono", "Correo",
+                "Licencia", "Categoría", "Vencimiento", ""
+            }, 0) {
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+
+    for (Conductor c : lista) {
+
+        modelo.addRow(new Object[]{
+            c.getId(),
+            c.getNombre(),
+            c.getApellido(),
+            c.getDocumento(),
+            c.getTipoDocumento(),
+            c.getTelefono(),
+            c.getCorreo(),
+            c.getLicencia(),
+            c.getCategoriaLicencia(),
+            c.getFechaVenciLicencia(),
+            ""
+        });
     }
-);
-        //Conductor
-      TableOptionsHelper.configurarClicOpciones(TblListDrivers, 9,
-        row -> { // Edit
-            TxtIDEditDriver.setText(TblListUsers.getValueAt(row, 0).toString());
-            TxtNameEditDriver.setText(TblListUsers.getValueAt(row, 1).toString());
-            TxtEmailEditDriver.setText(TblListUsers.getValueAt(row, 5).toString());
-            TxtPhoneEditDriver.setText(TblListUsers.getValueAt(row, 4).toString());
-            ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "EditDriver");
+
+    TblListDrivers.setModel(modelo);
+
+    aplicarColumnaAccionesConductores();
+}
+    private void aplicarColumnaAccionesConductores() {
+
+    TblListDrivers.getColumnModel().getColumn(10)
+            .setCellRenderer(new ButtonRenderer());
+
+    TblListDrivers.getColumnModel().getColumn(10)
+            .setMaxWidth(40);
+
+    TableOptionsHelper.configurarClicOpciones(
+        TblListDrivers,
+        10,
+
+        row -> { // EDITAR
+
+            TxtIDEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 0).toString()
+            );
+
+            TxtNameEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 1).toString()
+            );
+
+            TxtLastNameEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 2).toString()
+            );
+
+            TxtDocumentEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 3).toString()
+            );
+
+            TxtDocumentTypeEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 4).toString()
+            );
+
+            TxtPhoneEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 5).toString()
+            );
+
+            TxtEmailEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 6).toString()
+            );
+
+            TxtLicenceEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 7).toString()
+            );
+
+            TxtExpDateEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 8).toString()
+            );
+
+            TxtExpDateEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 9).toString()
+            );
+
+            // El ID identifica al conductor, por eso no debería modificarse
+            TxtIDEditDriver.setEditable(false);
+
+           
+        },
+
+        row -> { // ELIMINAR
+
+            String id = TblListDrivers.getValueAt(row, 0).toString();
+
+            int confirm = JOptionPane.showConfirmDialog(
+                    TblListDrivers,
+                    "¿Seguro que quieres eliminar el conductor " + id + "?",
+                    "Confirmar",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+
+                try {
+
+                    ControllerConductor.eliminarConductor(id);
+
+                    JOptionPane.showMessageDialog(
+                            TblListDrivers,
+                            "Conductor eliminado correctamente."
+                    );
+
+                } catch (RuntimeException ex) {
+
+                    JOptionPane.showMessageDialog(
+                            TblListDrivers,
+                            ex.getMessage()
+                    );
+                }
+            }
+        }
+    );
+}
+    
+    private void refrescarTablaPasajero(java.util.List<Pasajero> lista) {
+        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
+            new String[]{"ID", "Name", "LastName", "Document", "DocumentType", "Phone", "Email", ""}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        for (Pasajero p : lista) {
+            modelo.addRow(new Object[]{
+                p.getId(), p.getNombre(), p.getApellido(), p.getDocumento(),
+                p.getTipoDocumento(), p.getTelefono(), p.getCorreo(), ""
+            });
+        }
+        TblListPassanger.setModel(modelo);
+        aplicarColumnaAccionesPasajeros();
+        }  
+    
+    private void aplicarColumnaAccionesPasajeros() {
+        TblListPassanger.getColumnModel().getColumn(7).setCellRenderer(new ButtonRenderer());
+        TblListPassanger.getColumnModel().getColumn(7).setMaxWidth(40);
+
+        TableOptionsHelper.configurarClicOpciones(TblVehicles, 7,
+            row -> { // Edit
+                TxtIDEditPass.setText(TblListPassanger.getValueAt(row, 0).toString());
+                TxtNameEditPass.setText(TblListPassanger.getValueAt(row, 1).toString());
+                TxtLastNameEditPass.setText(TblListPassanger.getValueAt(row, 2).toString());
+                TxtDocumentEditPass.setText(TblListPassanger.getValueAt(row, 3).toString());
+                TxtTypeDocumentEditPass.setText(TblListPassanger.getValueAt(row, 4).toString());
+                TxtEmailEditPass.setText(TblListPassanger.getValueAt(row, 5).toString());
+                TxtPhoneEditPass.setText(TblListPassanger.getValueAt(row, 6).toString());
+                ((java.awt.CardLayout) PanelUsers.getLayout()) .show(PanelUsers, "EditPassenger"); },
+            row -> { // Delete
+                String document = TblListPassanger.getValueAt(row, 0).toString();
+                int confirm = JOptionPane.showConfirmDialog(TblVehicles,
+                        "¿Are you sure you want to remove this passenger? " + document + "?",
+                        "Confirm", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    try {
+                        ControllerVehiculo.eliminarVehiculo(document);
+                        JOptionPane.showMessageDialog(TblListPassanger, "Passenger successfully removed.");
+                    } catch (RuntimeException ex) {
+                        JOptionPane.showMessageDialog(TblListPassanger, ex.getMessage());
+                    }
+                }
+            }
+        );
+    }
+    
+      
+    private void refrescarTablaVehiculos(java.util.List<Vehiculo> lista) {
+        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
+            new String[]{"Placa", "Marca", "Modelo", "Año", "Color", "Combustible", "Chasis", ""}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        for (Vehiculo v : lista) {
+            modelo.addRow(new Object[]{
+                v.getPlaca(), v.getMarca(), v.getModelo(), v.getAnio(),
+                v.getColor(), v.getTipoCombustible(), v.getNumeroChasis(), ""
+            });
+        }
+        TblVehicles.setModel(modelo);
+        aplicarColumnaAccionesVehiculos();
+        }
+    
+   
+    private void aplicarColumnaAccionesVehiculos() {
+        TblVehicles.getColumnModel().getColumn(7).setCellRenderer(new ButtonRenderer());
+        TblVehicles.getColumnModel().getColumn(7).setMaxWidth(40);
+
+        TableOptionsHelper.configurarClicOpciones(TblVehicles, 7,
+            row -> { // Edit
+                TxtChangePlate.setText(TblVehicles.getValueAt(row, 0).toString());
+                TxtChangeBrand.setText(TblVehicles.getValueAt(row, 1).toString());
+                TxtChangeModel.setText(TblVehicles.getValueAt(row, 2).toString());
+                TxtChangeYear.setText(TblVehicles.getValueAt(row, 3).toString());
+                TxtChangeColor.setText(TblVehicles.getValueAt(row, 4).toString());
+                TxtChangeFuelType.setText(TblVehicles.getValueAt(row, 5).toString());
+                TxtChangeChassis.setText(TblVehicles.getValueAt(row, 6).toString());
+                ((java.awt.CardLayout) PanelHomeVehicles.getLayout()).show(PanelHomeVehicles, "EditVehicles");
             },
             row -> { // Delete
-        int confirm = JOptionPane.showConfirmDialog(TblListDrivers,
-            "¿Seguro que quieres eliminar esta fila?", "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            ((javax.swing.table.DefaultTableModel) TblListDrivers.getModel()).removeRow(row);
-        }
+                String placa = TblVehicles.getValueAt(row, 0).toString();
+                int confirm = JOptionPane.showConfirmDialog(TblVehicles,
+                        "¿Seguro que quieres eliminar el vehículo " + placa + "?",
+                        "Confirmar", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    try {
+                        ControllerVehiculo.eliminarVehiculo(placa);
+                        JOptionPane.showMessageDialog(TblVehicles, "Vehículo eliminado correctamente.");
+                    } catch (RuntimeException ex) {
+                        JOptionPane.showMessageDialog(TblVehicles, ex.getMessage());
+                    }
+                }
+            }
+        );
     }
-);
-          
-          
+    
+    private String validarDatosVehiculo(String placa, String anioTexto, String marca,
+        String modelo, String color, String tipoCombustible, String numeroChasis) {
+
+    if (placa.isBlank() || marca.isBlank() || modelo.isBlank()
+            || color.isBlank() || tipoCombustible.isBlank() || numeroChasis.isBlank()
+            || anioTexto.isBlank()) {
+        return "Todos los campos son obligatorios.";
     }
+
+    // Placa colombiana: 3 letras + 3 números (ej: ABC123)
+    if (!placa.matches("[A-Za-z]{3}[0-9]{3}")) {
+        return "La placa debe tener el formato colombiano: 3 letras seguidas de 3 números (ej: ABC123).";
+    }
+
+    // Año: solo números, dentro de un rango razonable
+    int anioActual = java.time.Year.now().getValue();
+    int anio;
+    try {
+        anio = Integer.parseInt(anioTexto);
+    } catch (NumberFormatException e) {
+        return "El año debe ser un número válido.";
+    }
+    if (anio < 1900 || anio > anioActual + 1) {
+        return "El año debe estar entre 1900 y " + (anioActual + 1) + ".";
+    }
+
+    // Chasis: exactamente 17 caracteres alfanuméricos (estándar VIN)
+    if (!numeroChasis.matches("[A-Za-z0-9]{17}")) {
+        return "El número de chasis debe tener exactamente 17 caracteres alfanuméricos.";
+    }
+
+    // Marca, modelo y color: solo letras y espacios
+    if (!marca.matches("[A-Za-zÁÉÍÓÚáéíóúÑñ ]+")) {
+        return "La marca solo debe contener letras.";
+    }
+    if (!color.matches("[A-Za-zÁÉÍÓÚáéíóúÑñ ]+")) {
+        return "El color solo debe contener letras.";
+    }
+ 
+    return null; // todo válido
+}
+    
+    private void limpiarCamposCreacion() {
+    TxtAddPlate.setText("");
+    TxtAddBrand.setText("");
+    TxtAddModel.setText("");
+    TxtAddColor.setText("");
+    TxtAddFuelType.setText("");
+    TxtAddChassis.setText("");
+    TxtAddYear.setText("");
+ 
+}
+    
+    public void limpiarCamposEditDriver() {
+    TxtIDEditDriver.setText("");
+    TxtNameEditDriver.setText("");
+    TxtLastNameEditDriver.setText("");
+    TxtDocumentEditDriver.setText("");
+    TxtDocumentTypeEditDriver.setText("");
+    TxtPhoneEditDriver.setText("");
+    TxtEmailEditDriver.setText("");
+    TxtLicenceEditDriver.setText("");
+    TxtLicenceTypeEditDriver.setText("");
+    TxtExpDateEditDriver.setText("");
+    
+    // Coloca el foco de escritura en el primer campo automáticamente
+    TxtIDEditDriver.requestFocus();
+}
+
+    
+    public void limpiarCamposAddPass() {
+    TxtIDEditPass.setText("");
+    TxtNameEditPass.setText("");
+    TxtLastNameEditPass.setText("");
+    TxtDocumentEditPass.setText("");
+    TxtTypeDocumentEditPass.setText("");
+    TxtPhoneEditPass.setText("");
+    TxtEmailEditPass.setText("");
+    TxtDateRegisterEditPass.setText("");
+    }
+    
+    private void limpiarCamposEdicion() {
+    TxtChangePlate.setText("");
+    TxtChangeBrand.setText("");
+    TxtChangeModel.setText("");
+    TxtChangeColor.setText("");
+    TxtChangeFuelType.setText("");
+    TxtChangeChassis.setText("");
+    TxtChangeYear.setText("");
+}
+    
+    
     private void iniciarVideo() {
       javafx.embed.swing.JFXPanel videoPanel = new javafx.embed.swing.JFXPanel();
 
@@ -153,34 +548,6 @@ public class GUIPrincipal extends javax.swing.JFrame {
           player.play();
       });
     }
-    
-    private void cargarDatosDePrueba() {
-    javax.swing.table.DefaultTableModel modelVehicles = 
-        (javax.swing.table.DefaultTableModel) TblVehicles.getModel();
-    modelVehicles.setRowCount(0); // limpia lo que traiga por defecto
-    modelVehicles.addRow(new Object[]{"ABC123", "Toyota", "Corolla", 4, "..."});
-    modelVehicles.addRow(new Object[]{"XYZ789", "Mazda", "3", 5, "..."});
-    modelVehicles.addRow(new Object[]{"LMN456", "Chevrolet", "Spark", 4, "..."});
-
-    javax.swing.table.DefaultTableModel modelUsers = 
-        (javax.swing.table.DefaultTableModel) TblListUsers.getModel();
-    modelUsers.setRowCount(0); // limpia lo que traiga por defecto
-
-    // Conductores (Driver)
-    modelUsers.addRow(new Object[]{"D001", "Carlos", "Ramírez", "CC", 3001234567L, "carlos.ramirez@mail.com", "Driver", "..."});
-    modelUsers.addRow(new Object[]{"D002", "Diana", "Lopez", "CC", 3009876543L, "diana.lopez@mail.com", "Driver", "..."});
-
-    // Pasajeros (Passenger)
-    modelUsers.addRow(new Object[]{"P001", "Juan", "Pérez", "CC", 3011122233L, "juan.perez@mail.com", "Passenger", "..."});
-    modelUsers.addRow(new Object[]{"P002", "Ana", "Gómez", "CC", 3024455667L, "ana.gomez@mail.com", "Passenger", "..."});
-    modelUsers.addRow(new Object[]{"P003", "Laura", "Carvajal", "CC", 3037788990L, "laura.carvajal@mail.com", "Passenger", "..."});
-}
-    
-    /**
-     * This method is called from within the constructor...
-     */
-    @SuppressWarnings("unchecked")
-   
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -217,7 +584,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
         jLabel43 = new javax.swing.JLabel();
         TxtSearchTrips1 = new javax.swing.JTextField();
         BtnSearchTrips1 = new javax.swing.JButton();
-        BtnAddTrips1 = new javax.swing.JButton();
+        BtnAddUser = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -255,6 +622,8 @@ public class GUIPrincipal extends javax.swing.JFrame {
         TxtDocumentTypeCreateDriver = new javax.swing.JTextField();
         jLabel73 = new javax.swing.JLabel();
         TxtDocumentCreateDriver = new javax.swing.JTextField();
+        jLabel76 = new javax.swing.JLabel();
+        TxtLastNameCreateDriver = new javax.swing.JTextField();
         PanelEditPassenger = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
@@ -270,6 +639,12 @@ public class GUIPrincipal extends javax.swing.JFrame {
         TxtLastNameEditPass = new javax.swing.JTextField();
         jButton11 = new javax.swing.JButton();
         jLabel32 = new javax.swing.JLabel();
+        jLabel40 = new javax.swing.JLabel();
+        TxtDocumentEditPass = new javax.swing.JTextField();
+        TxtTypeDocumentEditPass = new javax.swing.JTextField();
+        jLabel60 = new javax.swing.JLabel();
+        jLabel61 = new javax.swing.JLabel();
+        TxtDateRegisterEditPass = new javax.swing.JTextField();
         PanelEditDriver = new javax.swing.JPanel();
         jLabel45 = new javax.swing.JLabel();
         jLabel46 = new javax.swing.JLabel();
@@ -293,6 +668,8 @@ public class GUIPrincipal extends javax.swing.JFrame {
         jLabel75 = new javax.swing.JLabel();
         TxtDocumentEditDriver = new javax.swing.JTextField();
         TxtDocumentTypeEditDriver = new javax.swing.JTextField();
+        jLabel62 = new javax.swing.JLabel();
+        TxtLastNameEditDriver = new javax.swing.JTextField();
         PanelAddPassenger = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -303,11 +680,15 @@ public class GUIPrincipal extends javax.swing.JFrame {
         TxtPhoneCreatePass = new javax.swing.JTextField();
         jLabel44 = new javax.swing.JLabel();
         TxtIDCreatePass = new javax.swing.JTextField();
-        BtnCreateUser = new javax.swing.JButton();
+        BtnCreatePassanger = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         TxtLastNameCreatePass = new javax.swing.JTextField();
         jButton10 = new javax.swing.JButton();
         jLabel27 = new javax.swing.JLabel();
+        jLabel33 = new javax.swing.JLabel();
+        TxtDocumentCreatePass = new javax.swing.JTextField();
+        jLabel34 = new javax.swing.JLabel();
+        TxtTypeDocumentCreatePass = new javax.swing.JTextField();
         PanelVehicles = new javax.swing.JPanel();
         PanelHomeVehicles = new javax.swing.JPanel();
         PanelEditVehicles = new javax.swing.JPanel();
@@ -321,9 +702,15 @@ public class GUIPrincipal extends javax.swing.JFrame {
         TxtChangeModel = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
-        TxtChangeCapacity = new javax.swing.JTextField();
+        TxtChangeColor = new javax.swing.JTextField();
         BtnEditVehicles = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        jLabel35 = new javax.swing.JLabel();
+        TxtChangeFuelType = new javax.swing.JTextField();
+        TxtChangeColor2 = new javax.swing.JTextField();
+        TxtChangeChassis = new javax.swing.JLabel();
+        TxtChangeYear = new javax.swing.JTextField();
+        jLabel37 = new javax.swing.JLabel();
         PanelCreateVehicles = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -335,9 +722,15 @@ public class GUIPrincipal extends javax.swing.JFrame {
         TxtAddModel = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
-        TxtAddCapacity = new javax.swing.JTextField();
+        TxtAddColor = new javax.swing.JTextField();
         BtnAddCreateVehicles = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
+        jLabel36 = new javax.swing.JLabel();
+        TxtAddFuelType = new javax.swing.JTextField();
+        TxtAddChassis = new javax.swing.JTextField();
+        jLabel38 = new javax.swing.JLabel();
+        TxtAddYear = new javax.swing.JTextField();
+        jLabel39 = new javax.swing.JLabel();
         PanelListVehicles = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel41 = new javax.swing.JLabel();
@@ -347,6 +740,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         TblVehicles = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
+        btnList = new javax.swing.JButton();
 
         jInternalFrame1.setVisible(true);
 
@@ -585,8 +979,8 @@ public class GUIPrincipal extends javax.swing.JFrame {
 
         BtnSearchTrips1.setText("Search");
 
-        BtnAddTrips1.setText("Add");
-        BtnAddTrips1.addActionListener(this::BtnAddTrips1ActionPerformed);
+        BtnAddUser.setText("Add");
+        BtnAddUser.addActionListener(this::BtnAddUserActionPerformed);
 
         jButton2.setText("Drivers");
         jButton2.addActionListener(this::jButton2ActionPerformed);
@@ -626,31 +1020,24 @@ public class GUIPrincipal extends javax.swing.JFrame {
         PanelListUserLayout.setHorizontalGroup(
             PanelListUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelListUserLayout.createSequentialGroup()
+                .addGap(26, 26, 26)
                 .addGroup(PanelListUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel42, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(PanelListUserLayout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addGroup(PanelListUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel42, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelListUserLayout.createSequentialGroup()
-                                .addComponent(jLabel43)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TxtSearchTrips1, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(BtnSearchTrips1))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelListUserLayout.createSequentialGroup()
-                                .addComponent(jButton4)
-                                .addGap(41, 41, 41)
-                                .addComponent(jButton2)
-                                .addGap(41, 41, 41)
-                                .addComponent(jButton3)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelListUserLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(BtnAddTrips1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(PanelListUserLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 792, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel43)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TxtSearchTrips1, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(BtnSearchTrips1))
+                    .addGroup(PanelListUserLayout.createSequentialGroup()
+                        .addComponent(jButton4)
+                        .addGap(41, 41, 41)
+                        .addComponent(jButton2)
+                        .addGap(41, 41, 41)
+                        .addComponent(jButton3))
+                    .addGroup(PanelListUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(BtnAddUser)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 792, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(100, Short.MAX_VALUE))
         );
         PanelListUserLayout.setVerticalGroup(
@@ -670,9 +1057,9 @@ public class GUIPrincipal extends javax.swing.JFrame {
                     .addComponent(jLabel43))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(BtnAddTrips1)
-                .addGap(87, 87, 87))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(BtnAddUser)
+                .addContainerGap())
         );
 
         PanelUsers.add(PanelListUser, "ListUsers");
@@ -731,9 +1118,9 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(PanelListDriverLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(PanelListDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 840, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BtnAddTrips3))
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 840, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(BtnAddTrips3)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         PanelListDriverLayout.setVerticalGroup(
@@ -748,10 +1135,13 @@ public class GUIPrincipal extends javax.swing.JFrame {
                     .addComponent(TxtSearchTrips3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BtnSearchTrips3)
                     .addComponent(jLabel59))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(BtnAddTrips3)
+                .addGroup(PanelListDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelListDriverLayout.createSequentialGroup()
+                        .addGap(273, 273, 273)
+                        .addComponent(BtnAddTrips3))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelListDriverLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -801,6 +1191,8 @@ public class GUIPrincipal extends javax.swing.JFrame {
         jLabel73.setText("DocumentType:");
 
         TxtDocumentCreateDriver.addActionListener(this::TxtDocumentCreateDriverActionPerformed);
+
+        jLabel76.setText("Last Name: ");
 
         javax.swing.GroupLayout PanelAddDriverLayout = new javax.swing.GroupLayout(PanelAddDriver);
         PanelAddDriver.setLayout(PanelAddDriverLayout);
@@ -855,7 +1247,11 @@ public class GUIPrincipal extends javax.swing.JFrame {
                                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelAddDriverLayout.createSequentialGroup()
                                             .addComponent(jLabel65)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(TxtNameCreateDriver))))))
+                                            .addComponent(TxtNameCreateDriver))
+                                        .addGroup(PanelAddDriverLayout.createSequentialGroup()
+                                            .addComponent(jLabel76)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(TxtLastNameCreateDriver))))))
                         .addGap(0, 491, Short.MAX_VALUE))))
         );
         PanelAddDriverLayout.setVerticalGroup(
@@ -875,6 +1271,10 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 .addGroup(PanelAddDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel65)
                     .addComponent(TxtNameCreateDriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(PanelAddDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel76)
+                    .addComponent(TxtLastNameCreateDriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(PanelAddDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TxtDocumentCreateDriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -941,6 +1341,18 @@ public class GUIPrincipal extends javax.swing.JFrame {
 
         jLabel32.setText("Please enter the data you want to change:");
 
+        jLabel40.setText("Document:");
+
+        TxtDocumentEditPass.addActionListener(this::TxtDocumentEditPassActionPerformed);
+
+        TxtTypeDocumentEditPass.addActionListener(this::TxtTypeDocumentEditPassActionPerformed);
+
+        jLabel60.setText("TypeDocument:");
+
+        jLabel61.setText("DateRegister:");
+
+        TxtDateRegisterEditPass.addActionListener(this::TxtDateRegisterEditPassActionPerformed);
+
         javax.swing.GroupLayout PanelEditPassengerLayout = new javax.swing.GroupLayout(PanelEditPassenger);
         PanelEditPassenger.setLayout(PanelEditPassengerLayout);
         PanelEditPassengerLayout.setHorizontalGroup(
@@ -971,8 +1383,20 @@ public class GUIPrincipal extends javax.swing.JFrame {
                         .addComponent(jLabel29)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(TxtEmailEditPass))
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(514, Short.MAX_VALUE))
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(PanelEditPassengerLayout.createSequentialGroup()
+                        .addComponent(jLabel40)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TxtDocumentEditPass, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(PanelEditPassengerLayout.createSequentialGroup()
+                        .addComponent(jLabel60)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TxtTypeDocumentEditPass, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(PanelEditPassengerLayout.createSequentialGroup()
+                        .addComponent(jLabel61, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TxtDateRegisterEditPass)))
+                .addContainerGap(491, Short.MAX_VALUE))
         );
         PanelEditPassengerLayout.setVerticalGroup(
             PanelEditPassengerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -997,12 +1421,24 @@ public class GUIPrincipal extends javax.swing.JFrame {
                     .addComponent(TxtLastNameEditPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(PanelEditPassengerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel40)
+                    .addComponent(TxtDocumentEditPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(PanelEditPassengerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel60)
+                    .addComponent(TxtTypeDocumentEditPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(PanelEditPassengerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel29)
                     .addComponent(TxtEmailEditPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(PanelEditPassengerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel30)
                     .addComponent(TxtPhoneEditPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(PanelEditPassengerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel61)
+                    .addComponent(TxtDateRegisterEditPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(BtnEditPass)
                 .addContainerGap())
@@ -1053,6 +1489,8 @@ public class GUIPrincipal extends javax.swing.JFrame {
 
         jLabel75.setText("DocumentType:");
 
+        jLabel62.setText("LastName: ");
+
         javax.swing.GroupLayout PanelEditDriverLayout = new javax.swing.GroupLayout(PanelEditDriver);
         PanelEditDriver.setLayout(PanelEditDriverLayout);
         PanelEditDriverLayout.setHorizontalGroup(
@@ -1067,7 +1505,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                                 .addGroup(PanelEditDriverLayout.createSequentialGroup()
                                     .addComponent(jLabel64)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(TxtExpDateEditDriver, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE))
+                                    .addComponent(TxtExpDateEditDriver, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
                                 .addGroup(PanelEditDriverLayout.createSequentialGroup()
                                     .addComponent(jLabel75)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1082,11 +1520,13 @@ public class GUIPrincipal extends javax.swing.JFrame {
                                 .addGroup(PanelEditDriverLayout.createSequentialGroup()
                                     .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(jLabel47)
-                                        .addComponent(jLabel46, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(jLabel46, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel62, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(TxtNameEditDriver, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
-                                        .addComponent(TxtEmailEditDriver))))
+                                        .addComponent(TxtEmailEditDriver)
+                                        .addComponent(TxtLastNameEditDriver, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE))))
                             .addGap(10, 10, 10))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelEditDriverLayout.createSequentialGroup()
                             .addComponent(jLabel48)
@@ -1104,7 +1544,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                         .addComponent(jLabel50)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(TxtIDEditDriver, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 491, Short.MAX_VALUE))
+                .addGap(0, 470, Short.MAX_VALUE))
         );
         PanelEditDriverLayout.setVerticalGroup(
             PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1123,6 +1563,10 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel46)
                     .addComponent(TxtNameEditDriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel62)
+                    .addComponent(TxtLastNameEditDriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TxtDocumentEditDriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1168,6 +1612,8 @@ public class GUIPrincipal extends javax.swing.JFrame {
 
         jLabel3.setText("Email: ");
 
+        TxtNameCreatePass.addActionListener(this::TxtNameCreatePassActionPerformed);
+
         jLabel4.setText("Phone: ");
 
         TxtPhoneCreatePass.addActionListener(this::TxtPhoneCreatePassActionPerformed);
@@ -1176,8 +1622,8 @@ public class GUIPrincipal extends javax.swing.JFrame {
 
         TxtIDCreatePass.addActionListener(this::TxtIDCreatePassActionPerformed);
 
-        BtnCreateUser.setText("Add");
-        BtnCreateUser.addActionListener(this::BtnCreateUserActionPerformed);
+        BtnCreatePassanger.setText("Add");
+        BtnCreatePassanger.addActionListener(this::BtnCreatePassangerActionPerformed);
 
         jLabel6.setText("Last Name: ");
 
@@ -1189,6 +1635,14 @@ public class GUIPrincipal extends javax.swing.JFrame {
 
         jLabel27.setText("Please enter the data:");
 
+        jLabel33.setText("Document:");
+
+        TxtDocumentCreatePass.addActionListener(this::TxtDocumentCreatePassActionPerformed);
+
+        jLabel34.setText("TypeDocument:");
+
+        TxtTypeDocumentCreatePass.addActionListener(this::TxtTypeDocumentCreatePassActionPerformed);
+
         javax.swing.GroupLayout PanelAddPassengerLayout = new javax.swing.GroupLayout(PanelAddPassenger);
         PanelAddPassenger.setLayout(PanelAddPassengerLayout);
         PanelAddPassengerLayout.setHorizontalGroup(
@@ -1198,7 +1652,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 .addGroup(PanelAddPassengerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BtnCreateUser, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(BtnCreatePassanger, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(PanelAddPassengerLayout.createSequentialGroup()
                         .addComponent(jLabel44)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1210,17 +1664,25 @@ public class GUIPrincipal extends javax.swing.JFrame {
                     .addGroup(PanelAddPassengerLayout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(TxtLastNameCreatePass, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(TxtLastNameCreatePass))
                     .addGroup(PanelAddPassengerLayout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(TxtPhoneCreatePass))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(PanelAddPassengerLayout.createSequentialGroup()
+                        .addComponent(jLabel33)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TxtDocumentCreatePass))
+                    .addGroup(PanelAddPassengerLayout.createSequentialGroup()
+                        .addComponent(jLabel34)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TxtTypeDocumentCreatePass, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(PanelAddPassengerLayout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(TxtEmailCreatePass))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(514, Short.MAX_VALUE))
+                        .addComponent(TxtEmailCreatePass)))
+                .addContainerGap(491, Short.MAX_VALUE))
         );
         PanelAddPassengerLayout.setVerticalGroup(
             PanelAddPassengerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1245,14 +1707,22 @@ public class GUIPrincipal extends javax.swing.JFrame {
                     .addComponent(TxtLastNameCreatePass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(PanelAddPassengerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(TxtEmailCreatePass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel33)
+                    .addComponent(TxtDocumentCreatePass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(PanelAddPassengerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel34)
+                    .addComponent(TxtTypeDocumentCreatePass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(PanelAddPassengerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(TxtPhoneCreatePass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(BtnCreateUser)
+                .addGroup(PanelAddPassengerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(TxtEmailCreatePass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addComponent(BtnCreatePassanger)
                 .addContainerGap())
         );
 
@@ -1280,9 +1750,9 @@ public class GUIPrincipal extends javax.swing.JFrame {
 
         TxtChangeModel.addActionListener(this::TxtChangeModelActionPerformed);
 
-        jLabel23.setText("Passenger capacity:");
+        jLabel23.setText("Color: ");
 
-        TxtChangeCapacity.addActionListener(this::TxtChangeCapacityActionPerformed);
+        TxtChangeColor.addActionListener(this::TxtChangeColorActionPerformed);
 
         BtnEditVehicles.setText("Edit");
         BtnEditVehicles.addActionListener(this::BtnEditVehiclesActionPerformed);
@@ -1290,6 +1760,18 @@ public class GUIPrincipal extends javax.swing.JFrame {
         jButton6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton6.setText("<-- ");
         jButton6.addActionListener(this::jButton6ActionPerformed);
+
+        jLabel35.setText("Fuel Type:");
+
+        TxtChangeFuelType.addActionListener(this::TxtChangeFuelTypeActionPerformed);
+
+        TxtChangeColor2.addActionListener(this::TxtChangeColor2ActionPerformed);
+
+        TxtChangeChassis.setText("Chassis:");
+
+        TxtChangeYear.addActionListener(this::TxtChangeYearActionPerformed);
+
+        jLabel37.setText("Year:");
 
         javax.swing.GroupLayout PanelEditVehiclesLayout = new javax.swing.GroupLayout(PanelEditVehicles);
         PanelEditVehicles.setLayout(PanelEditVehiclesLayout);
@@ -1314,13 +1796,25 @@ public class GUIPrincipal extends javax.swing.JFrame {
                                     .addGroup(PanelEditVehiclesLayout.createSequentialGroup()
                                         .addComponent(jLabel23)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(TxtChangeCapacity))
+                                        .addComponent(TxtChangeColor))
                                     .addGroup(PanelEditVehiclesLayout.createSequentialGroup()
                                         .addComponent(jLabel21)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(PanelEditVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(BtnEditVehicles, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(TxtChangeModel, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                            .addComponent(TxtChangeModel, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(PanelEditVehiclesLayout.createSequentialGroup()
+                                        .addComponent(jLabel35)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(TxtChangeFuelType))
+                                    .addGroup(PanelEditVehiclesLayout.createSequentialGroup()
+                                        .addComponent(TxtChangeChassis)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(TxtChangeColor2))
+                                    .addGroup(PanelEditVehiclesLayout.createSequentialGroup()
+                                        .addComponent(jLabel37)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(TxtChangeYear)))))
                         .addGap(112, 224, Short.MAX_VALUE))
                     .addGroup(PanelEditVehiclesLayout.createSequentialGroup()
                         .addGroup(PanelEditVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1356,12 +1850,24 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PanelEditVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel23)
-                    .addComponent(TxtChangeCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(TxtChangeColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelEditVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel35)
+                    .addComponent(TxtChangeFuelType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelEditVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TxtChangeChassis)
+                    .addComponent(TxtChangeColor2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelEditVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel37)
+                    .addComponent(TxtChangeYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel22)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(BtnEditVehicles)
-                .addContainerGap(363, Short.MAX_VALUE))
+                .addContainerGap(279, Short.MAX_VALUE))
         );
 
         PanelHomeVehicles.add(PanelEditVehicles, "EditVehicles");
@@ -1384,9 +1890,9 @@ public class GUIPrincipal extends javax.swing.JFrame {
 
         TxtAddModel.addActionListener(this::TxtAddModelActionPerformed);
 
-        jLabel17.setText("Passenger capacity:");
+        jLabel17.setText("Color:");
 
-        TxtAddCapacity.addActionListener(this::TxtAddCapacityActionPerformed);
+        TxtAddColor.addActionListener(this::TxtAddColorActionPerformed);
 
         BtnAddCreateVehicles.setText("Add");
         BtnAddCreateVehicles.addActionListener(this::BtnAddCreateVehiclesActionPerformed);
@@ -1394,6 +1900,18 @@ public class GUIPrincipal extends javax.swing.JFrame {
         jButton7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton7.setText("<-- ");
         jButton7.addActionListener(this::jButton7ActionPerformed);
+
+        jLabel36.setText("Fuel Type:");
+
+        TxtAddFuelType.addActionListener(this::TxtAddFuelTypeActionPerformed);
+
+        TxtAddChassis.addActionListener(this::TxtAddChassisActionPerformed);
+
+        jLabel38.setText("Chassis:");
+
+        TxtAddYear.addActionListener(this::TxtAddYearActionPerformed);
+
+        jLabel39.setText("Year:");
 
         javax.swing.GroupLayout PanelCreateVehiclesLayout = new javax.swing.GroupLayout(PanelCreateVehicles);
         PanelCreateVehicles.setLayout(PanelCreateVehiclesLayout);
@@ -1415,13 +1933,25 @@ public class GUIPrincipal extends javax.swing.JFrame {
                         .addGroup(PanelCreateVehiclesLayout.createSequentialGroup()
                             .addComponent(jLabel17)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(TxtAddCapacity))
+                            .addComponent(TxtAddColor))
                         .addGroup(PanelCreateVehiclesLayout.createSequentialGroup()
                             .addComponent(jLabel14)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addGroup(PanelCreateVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(BtnAddCreateVehicles, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(TxtAddModel, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(TxtAddModel, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(PanelCreateVehiclesLayout.createSequentialGroup()
+                            .addComponent(jLabel36)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(TxtAddFuelType))
+                        .addGroup(PanelCreateVehiclesLayout.createSequentialGroup()
+                            .addComponent(jLabel38)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(TxtAddChassis))
+                        .addGroup(PanelCreateVehiclesLayout.createSequentialGroup()
+                            .addComponent(jLabel39)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(TxtAddYear)))
                     .addComponent(jLabel16)
                     .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1451,12 +1981,24 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PanelCreateVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17)
-                    .addComponent(TxtAddCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(TxtAddColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelCreateVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel36)
+                    .addComponent(TxtAddFuelType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelCreateVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel38)
+                    .addComponent(TxtAddChassis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelCreateVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel39)
+                    .addComponent(TxtAddYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
                 .addComponent(BtnAddCreateVehicles)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 185, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 143, Short.MAX_VALUE)
                 .addComponent(jLabel16)
-                .addContainerGap(184, Short.MAX_VALUE))
+                .addContainerGap(142, Short.MAX_VALUE))
         );
 
         PanelHomeVehicles.add(PanelCreateVehicles, "CreateVehicle");
@@ -1470,6 +2012,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
         jLabel41.setText("Search: ");
 
         BtnSearchVehicles.setText("Search");
+        BtnSearchVehicles.addActionListener(this::BtnSearchVehiclesActionPerformed);
 
         BtnCreateVehicle.setText("Add");
         BtnCreateVehicle.addActionListener(this::BtnCreateVehicleActionPerformed);
@@ -1502,6 +2045,9 @@ public class GUIPrincipal extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         jLabel5.setText("Add a new vehicle here:");
 
+        btnList.setText("List");
+        btnList.addActionListener(this::btnListActionPerformed);
+
         javax.swing.GroupLayout PanelListVehiclesLayout = new javax.swing.GroupLayout(PanelListVehicles);
         PanelListVehicles.setLayout(PanelListVehiclesLayout);
         PanelListVehiclesLayout.setHorizontalGroup(
@@ -1521,13 +2067,14 @@ public class GUIPrincipal extends javax.swing.JFrame {
                             .addComponent(jLabel5)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(BtnCreateVehicle))
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnList)))
                 .addContainerGap(44, Short.MAX_VALUE))
         );
         PanelListVehiclesLayout.setVerticalGroup(
             PanelListVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelListVehiclesLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(22, Short.MAX_VALUE)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PanelListVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1540,7 +2087,9 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 .addGroup(PanelListVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BtnCreateVehicle)
                     .addComponent(jLabel5))
-                .addGap(244, 244, 244))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnList, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(203, 203, 203))
         );
 
         PanelHomeVehicles.add(PanelListVehicles, "ListVehicles");
@@ -1591,12 +2140,33 @@ public class GUIPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_TxtAddModelActionPerformed
 
-    private void TxtAddCapacityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtAddCapacityActionPerformed
+    private void TxtAddColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtAddColorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_TxtAddCapacityActionPerformed
+    }//GEN-LAST:event_TxtAddColorActionPerformed
 
     private void BtnAddCreateVehiclesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAddCreateVehiclesActionPerformed
-        // TODO add your handling code here:
+            String placa           = TxtAddPlate.getText().trim().toUpperCase();
+            String marca            = TxtAddBrand.getText().trim();
+            String modelo           = TxtAddModel.getText().trim();
+            String color            = TxtAddColor.getText().trim();
+            String tipoCombustible  = TxtAddFuelType.getText().trim();
+            String numeroChasis     = TxtAddChassis.getText().trim().toUpperCase();
+            String anioTexto        = TxtAddYear.getText().trim();
+
+            String error = validarDatosVehiculo(placa, anioTexto, marca, modelo, color, tipoCombustible, numeroChasis);
+            if (error != null) {
+                JOptionPane.showMessageDialog(this, error, "Datos inválidos", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            try {
+                Vehiculo nuevo = new Vehiculo(placa, Integer.parseInt(anioTexto), marca, modelo, color, tipoCombustible, numeroChasis);
+                ControllerVehiculo.crearVehiculo(nuevo);
+                JOptionPane.showMessageDialog(this, "Vehículo creado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                limpiarCamposCreacion();
+            } catch (RuntimeException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
     }//GEN-LAST:event_BtnAddCreateVehiclesActionPerformed
 
     private void TxtChangePlateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtChangePlateActionPerformed
@@ -1611,12 +2181,33 @@ public class GUIPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_TxtChangeModelActionPerformed
 
-    private void TxtChangeCapacityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtChangeCapacityActionPerformed
+    private void TxtChangeColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtChangeColorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_TxtChangeCapacityActionPerformed
+    }//GEN-LAST:event_TxtChangeColorActionPerformed
 
     private void BtnEditVehiclesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEditVehiclesActionPerformed
-        // TODO add your handling code here:
+         String placa           = TxtChangePlate.getText().trim().toUpperCase();
+    String marca           = TxtChangeBrand.getText().trim();
+    String modelo          = TxtChangeModel.getText().trim();
+    String color           = TxtChangeColor.getText().trim();
+    String tipoCombustible = TxtChangeFuelType.getText().trim();
+    String numeroChasis    = TxtChangeChassis.getText().trim().toUpperCase();
+    String anioTexto       = TxtChangeYear.getText().trim();
+
+    String error = validarDatosVehiculo(placa, anioTexto, marca, modelo, color, tipoCombustible, numeroChasis);
+    if (error != null) {
+        JOptionPane.showMessageDialog(this, error, "Datos inválidos", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    try {
+        Vehiculo actualizado = new Vehiculo(placa, Integer.parseInt(anioTexto), marca, modelo, color, tipoCombustible, numeroChasis);
+        ControllerVehiculo.modificarVehiculo(actualizado);
+        JOptionPane.showMessageDialog(this, "Vehículo actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        limpiarCamposEdicion();
+    } catch (RuntimeException ex) {
+        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }  
     }//GEN-LAST:event_BtnEditVehiclesActionPerformed
 
     private void BtnCreateVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCreateVehicleActionPerformed
@@ -1624,9 +2215,29 @@ public class GUIPrincipal extends javax.swing.JFrame {
             cl.show(PanelHomeVehicles, "CreateVehicle"); // create
     }//GEN-LAST:event_BtnCreateVehicleActionPerformed
 
-    private void BtnAddTrips1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAddTrips1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_BtnAddTrips1ActionPerformed
+    private void BtnAddUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAddUserActionPerformed
+
+    Object[] opciones = {"Driver", "Passager"};
+
+    int seleccion = JOptionPane.showOptionDialog(
+        this,                                   // componente padre
+        "¿What type of user do you want to choose??",   // mensaje
+        "New user",                        // título
+        JOptionPane.YES_NO_OPTION,               // tipo (solo afecta iconos/orden por defecto)
+        JOptionPane.QUESTION_MESSAGE,            // ícono
+        null,                                    // ícono personalizado (null = default)
+        opciones,                                // botones personalizados
+        opciones[0]                              // botón por defecto
+    );
+
+    if (seleccion == 0) { // "Conductor"
+        ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "AddDriver");
+    } else if (seleccion == 1) { // "Pasajero"
+        ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "AddPassenger");
+    }
+    // Si seleccion == JOptionPane.CLOSED_OPTION (-1), el usuario cerró el diálogo sin elegir: no hacer nada
+
+    }//GEN-LAST:event_BtnAddUserActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "ListDriver");
@@ -1640,9 +2251,66 @@ public class GUIPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_TxtIDCreatePassActionPerformed
 
-    private void BtnCreateUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCreateUserActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_BtnCreateUserActionPerformed
+    private void BtnCreatePassangerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCreatePassangerActionPerformed
+   String ID = TxtIDCreatePass.getText().trim().toUpperCase();
+    String Name = TxtNameCreatePass.getText().trim();
+    String LastName = TxtLastNameCreatePass.getText().trim();
+    String Document = TxtDocumentCreatePass.getText().trim();
+    String DocumentType = TxtTypeDocumentCreatePass.getText().trim();
+    String Phone = TxtPhoneCreatePass.getText().trim();
+    String Email = TxtEmailCreatePass.getText().trim();
+
+    // Fecha de registro automática
+    String fechaRegistro = java.time.LocalDate.now().toString();
+
+    // Crear pasajero
+    Pasajero nuevo = new Pasajero(
+            Name,
+            LastName,
+            Document,
+            DocumentType,
+            Phone,
+            Email,
+            ID,
+            fechaRegistro
+    );
+
+    // Validar los datos
+    Boolean error = nuevo.validarDatosPasajero();
+
+    if (error != true) {
+        JOptionPane.showMessageDialog(
+                this,
+                error,
+                "Datos inválidos",
+                JOptionPane.ERROR_MESSAGE
+        );
+        return;
+    }
+
+    try {
+
+        ControllerPasajero.crearPasajero(nuevo);
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Pasajero creado correctamente.",
+                "Éxito",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        limpiarCamposCreacion();
+
+    } catch (RuntimeException ex) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                ex.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+        );
+    }
+    }//GEN-LAST:event_BtnCreatePassangerActionPerformed
 
     private void TxtEmailEditDriverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtEmailEditDriverActionPerformed
         // TODO add your handling code here:
@@ -1657,7 +2325,67 @@ public class GUIPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_TxtIDEditDriverActionPerformed
 
     private void BtnEditDriverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEditDriverActionPerformed
-        // TODO add your handling code here:
+        String ID = TxtIDEditDriver.getText().trim().toUpperCase();
+String Name = TxtNameEditDriver.getText().trim();
+String LastName = TxtLastNameEditDriver.getText().trim();
+String Document = TxtDocumentEditDriver.getText().trim();
+String DocumentType = TxtDocumentTypeEditDriver.getText().trim();
+String Phone = TxtPhoneEditDriver.getText().trim();
+String Email = TxtEmailEditDriver.getText().trim();
+
+String License = TxtLicenceEditDriver.getText().trim().toUpperCase();
+String CategoryLicense = TxtLicenceTypeEditDriver.getText().trim();
+String ExpirationLicense = TxtExpDateEditDriver.getText().trim();
+
+// Crear objeto actualizado
+Conductor actualizado = new Conductor(
+        ID,
+        Name,
+        LastName,
+        Document,
+        DocumentType,
+        Phone,
+        Email,
+        License,
+        CategoryLicense,
+        ExpirationLicense
+);
+
+// Validar datos
+String error = actualizado.validarDatosConductor();
+
+if (error != null) {
+    JOptionPane.showMessageDialog(
+            this,
+            error,
+            "Datos inválidos",
+            JOptionPane.ERROR_MESSAGE
+    );
+    return;
+}
+
+try {
+
+    ControllerConductor.modificarConductor(actualizado);
+
+    JOptionPane.showMessageDialog(
+            this,
+            "Conductor actualizado correctamente.",
+            "Éxito",
+            JOptionPane.INFORMATION_MESSAGE
+    );
+
+    limpiarCamposEditDriver();
+
+} catch (RuntimeException ex) {
+
+    JOptionPane.showMessageDialog(
+            this,
+            ex.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE
+    );
+}
     }//GEN-LAST:event_BtnEditDriverActionPerformed
 
     private void TxtLicenceEditDriverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtLicenceEditDriverActionPerformed
@@ -1701,7 +2429,67 @@ public class GUIPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_TxtIDCreateDriverActionPerformed
 
     private void BtnCreateDriverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCreateDriverActionPerformed
-        // TODO add your handling code here:
+         String ID = TxtIDCreateDriver.getText().trim().toUpperCase();
+         String Name = TxtNameCreateDriver.getText().trim();
+         String LastName = ""; // TODO: agregar campo Apellido
+         String Document = TxtIDCreateDriver.getText().trim(); // TODO: agregar campo Documento
+         String DocumentType = "CC"; // TODO: agregar campo TipoDocumento
+         String Phone = TxtPhoneCreateDriver.getText().trim();
+         String Email = TxtEmailCreateDriver.getText().trim();
+
+         String License = TxtLicenceCreateDriver.getText().trim().toUpperCase();
+         String CategoryLicense = TxtLicenceTypeCreateDriver.getText().trim();
+         String ExpirationLicense = TxtExpDateCreateDriver.getText().trim();
+
+         // Crear conductor
+         Conductor nuevo = new Conductor(
+                 ID,
+                 Name,
+                 LastName,
+                 Document,
+                 DocumentType,
+                 Phone,
+                 Email,
+                 License,
+                 CategoryLicense,
+                 ExpirationLicense
+         );
+
+         // Validar los datos
+         String error = nuevo.validarDatosConductor();
+
+         if (error != null) {
+             JOptionPane.showMessageDialog(
+                     this,
+                     error,
+                     "Datos inválidos",
+                     JOptionPane.ERROR_MESSAGE
+             );
+             return;
+         }
+
+         try {
+
+             ControllerConductor.crearConductor(nuevo);
+
+             JOptionPane.showMessageDialog(
+                     this,
+                     "Conductor creado correctamente.",
+                     "Éxito",
+                     JOptionPane.INFORMATION_MESSAGE
+             );
+
+             limpiarCamposCreacion();
+
+         } catch (RuntimeException ex) {
+
+             JOptionPane.showMessageDialog(
+                     this,
+                     ex.getMessage(),
+                     "Error",
+                     JOptionPane.ERROR_MESSAGE
+             );
+         }
     }//GEN-LAST:event_BtnCreateDriverActionPerformed
 
     private void TxtLicenceCreateDriverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtLicenceCreateDriverActionPerformed
@@ -1741,11 +2529,71 @@ public class GUIPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_TxtPhoneEditPassActionPerformed
 
     private void TxtIDEditPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtIDEditPassActionPerformed
-        // TODO add your handling code here:
+       
     }//GEN-LAST:event_TxtIDEditPassActionPerformed
 
     private void BtnEditPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEditPassActionPerformed
-        // TODO add your handling code here:
+                                      
+    String ID = TxtIDEditPass.getText().trim().toUpperCase(); 
+    String Name = TxtNameEditPass.getText().trim(); 
+    String LastName = TxtLastNameEditPass.getText().trim(); 
+    String Document = TxtDocumentEditPass.getText().trim(); 
+    String DocumentType = TxtTypeDocumentEditPass.getText().trim(); 
+    String Phone = TxtPhoneEditPass.getText().trim(); 
+    String Email = TxtEmailEditPass.getText().trim(); 
+    String FechaRegistro = TxtDateRegisterEditPass.getText().trim(); 
+
+    // === VALIDACIONES DIRECTAS ===
+    // Nombre: solamente letras y espacios
+    if (!Name.matches("[A-Za-zÁÉÍÓÚáéíóúÑñ ]+")) {
+        JOptionPane.showMessageDialog(this, "El nombre solo debe contener letras y espacios.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+        return; // Detiene la ejecución del botón
+    }
+
+    // Apellido: solamente letras y espacios
+    if (!LastName.matches("[A-Za-zÁÉÍÓÚáéíóúÑñ ]+")) {
+        JOptionPane.showMessageDialog(this, "El apellido solo debe contener letras y espacios.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Documento: solamente números
+    if (!Document.matches("[0-9]+")) {
+        JOptionPane.showMessageDialog(this, "El documento solo debe contener números.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Teléfono: solamente números
+    if (!Phone.matches("[0-9]+")) {
+        JOptionPane.showMessageDialog(this, "El teléfono solo debe contener números.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Correo electrónico
+    if (!Email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+        JOptionPane.showMessageDialog(this, "El correo electrónico no tiene un formato válido.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // === CREACIÓN DEL OBJETO Y PROCESAMIENTO ===
+    // Crear objeto actualizado 
+    Pasajero actualizado = new Pasajero(Name, LastName, Document, DocumentType, Phone, Email, ID, FechaRegistro); 
+
+    // Validación secundaria opcional (Si ya validaste arriba, esto podría no ser necesario, pero lo dejamos si tu clase hace otras revisiones)
+    Boolean error = actualizado.validarDatosPasajero(); 
+    if (error != true) { 
+        JOptionPane.showMessageDialog(this, error, "Datos inválidos", JOptionPane.ERROR_MESSAGE); 
+        return; 
+    } 
+
+    try { 
+        ControllerPasajero.modificarPasajero(actualizado); 
+        JOptionPane.showMessageDialog(this, "Pasajero actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE); 
+        limpiarCamposAddPass(); 
+    } catch (RuntimeException ex) { 
+        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
+    } 
+
+        
     }//GEN-LAST:event_BtnEditPassActionPerformed
 
     private void TxtLastNameEditPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtLastNameEditPassActionPerformed
@@ -1776,6 +2624,76 @@ public class GUIPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_TxtDocumentCreateDriverActionPerformed
 
+    private void TxtDocumentCreatePassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtDocumentCreatePassActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtDocumentCreatePassActionPerformed
+
+    private void TxtTypeDocumentCreatePassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtTypeDocumentCreatePassActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtTypeDocumentCreatePassActionPerformed
+
+    private void TxtChangeFuelTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtChangeFuelTypeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtChangeFuelTypeActionPerformed
+
+    private void TxtChangeColor2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtChangeColor2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtChangeColor2ActionPerformed
+
+    private void TxtChangeYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtChangeYearActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtChangeYearActionPerformed
+
+    private void TxtAddFuelTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtAddFuelTypeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtAddFuelTypeActionPerformed
+
+    private void TxtAddChassisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtAddChassisActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtAddChassisActionPerformed
+
+    private void TxtAddYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtAddYearActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtAddYearActionPerformed
+
+    private void btnListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListActionPerformed
+        refrescarTablaVehiculos(ControllerVehiculo.listarVehiculos());
+    }//GEN-LAST:event_btnListActionPerformed
+
+    private void BtnSearchVehiclesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSearchVehiclesActionPerformed
+        String placa = TxtSearchVehicles.getText().trim().toUpperCase() ;
+
+    if (placa.isBlank()) {
+        JOptionPane.showMessageDialog(this, "Enter a license plate to search.");
+        return;
+    }
+
+    Vehiculo encontrado = ControllerVehiculo.buscarVehiculo(placa);
+
+    if (encontrado != null) {
+        refrescarTablaVehiculos(java.util.List.of(encontrado));
+    } else {
+        JOptionPane.showMessageDialog(this, "No vehicle with that license plate was found. " + placa);
+        refrescarTablaVehiculos(java.util.List.of());
+    }
+    }//GEN-LAST:event_BtnSearchVehiclesActionPerformed
+
+    private void TxtDocumentEditPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtDocumentEditPassActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtDocumentEditPassActionPerformed
+
+    private void TxtTypeDocumentEditPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtTypeDocumentEditPassActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtTypeDocumentEditPassActionPerformed
+
+    private void TxtNameCreatePassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtNameCreatePassActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtNameCreatePassActionPerformed
+
+    private void TxtDateRegisterEditPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtDateRegisterEditPassActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtDateRegisterEditPassActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1803,11 +2721,11 @@ public class GUIPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnAddCreateVehicles;
-    private javax.swing.JButton BtnAddTrips1;
     private javax.swing.JButton BtnAddTrips2;
     private javax.swing.JButton BtnAddTrips3;
+    private javax.swing.JButton BtnAddUser;
     private javax.swing.JButton BtnCreateDriver;
-    private javax.swing.JButton BtnCreateUser;
+    private javax.swing.JButton BtnCreatePassanger;
     private javax.swing.JButton BtnCreateVehicle;
     private javax.swing.JButton BtnEditDriver;
     private javax.swing.JButton BtnEditPass;
@@ -1838,15 +2756,25 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private javax.swing.JTable TblListUsers;
     private javax.swing.JTable TblVehicles;
     private javax.swing.JTextField TxtAddBrand;
-    private javax.swing.JTextField TxtAddCapacity;
+    private javax.swing.JTextField TxtAddChassis;
+    private javax.swing.JTextField TxtAddColor;
+    private javax.swing.JTextField TxtAddFuelType;
     private javax.swing.JTextField TxtAddModel;
     private javax.swing.JTextField TxtAddPlate;
+    private javax.swing.JTextField TxtAddYear;
     private javax.swing.JTextField TxtChangeBrand;
-    private javax.swing.JTextField TxtChangeCapacity;
+    private javax.swing.JLabel TxtChangeChassis;
+    private javax.swing.JTextField TxtChangeColor;
+    private javax.swing.JTextField TxtChangeColor2;
+    private javax.swing.JTextField TxtChangeFuelType;
     private javax.swing.JTextField TxtChangeModel;
     private javax.swing.JTextField TxtChangePlate;
+    private javax.swing.JTextField TxtChangeYear;
+    private javax.swing.JTextField TxtDateRegisterEditPass;
     private javax.swing.JTextField TxtDocumentCreateDriver;
+    private javax.swing.JTextField TxtDocumentCreatePass;
     private javax.swing.JTextField TxtDocumentEditDriver;
+    private javax.swing.JTextField TxtDocumentEditPass;
     private javax.swing.JTextField TxtDocumentTypeCreateDriver;
     private javax.swing.JTextField TxtDocumentTypeEditDriver;
     private javax.swing.JTextField TxtEmailCreateDriver;
@@ -1859,7 +2787,9 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField TxtIDCreatePass;
     private javax.swing.JTextField TxtIDEditDriver;
     private javax.swing.JTextField TxtIDEditPass;
+    private javax.swing.JTextField TxtLastNameCreateDriver;
     private javax.swing.JTextField TxtLastNameCreatePass;
+    private javax.swing.JTextField TxtLastNameEditDriver;
     private javax.swing.JTextField TxtLastNameEditPass;
     private javax.swing.JTextField TxtLicenceCreateDriver;
     private javax.swing.JTextField TxtLicenceEditDriver;
@@ -1877,6 +2807,9 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField TxtSearchTrips2;
     private javax.swing.JTextField TxtSearchTrips3;
     private javax.swing.JTextField TxtSearchVehicles;
+    private javax.swing.JTextField TxtTypeDocumentCreatePass;
+    private javax.swing.JTextField TxtTypeDocumentEditPass;
+    private javax.swing.JButton btnList;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
@@ -1917,7 +2850,15 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel42;
     private javax.swing.JLabel jLabel43;
@@ -1939,6 +2880,9 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel58;
     private javax.swing.JLabel jLabel59;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel60;
+    private javax.swing.JLabel jLabel61;
+    private javax.swing.JLabel jLabel62;
     private javax.swing.JLabel jLabel63;
     private javax.swing.JLabel jLabel64;
     private javax.swing.JLabel jLabel65;
@@ -1953,6 +2897,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel73;
     private javax.swing.JLabel jLabel74;
     private javax.swing.JLabel jLabel75;
+    private javax.swing.JLabel jLabel76;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
