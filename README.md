@@ -175,7 +175,11 @@ El manejo de excepciones permite proporcionar mensajes de error adecuados y mant
 
 ---
 
-# 🏗️ Arquitectura del proyecto
+## 🏗️ Arquitectura MVC
+
+RutaMatch utiliza una estructura basada en el patrón MVC:
+
+![Diagrama MVC](docs/diagrama-mvc.png)
 
 El proyecto utiliza una organización basada en paquetes para separar las responsabilidades principales:
 
@@ -213,10 +217,6 @@ RutaMatch
 │
 ├── pom.xml
 └── README.md
-
-RutaMatch utiliza una estructura basada en el patrón MVC:
-
-![Diagrama MVC](docs/diagrama-mvc.png)
 ```
 
 ---
