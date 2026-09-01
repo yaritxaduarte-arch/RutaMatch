@@ -39,10 +39,10 @@ public class GUIPrincipal extends javax.swing.JFrame implements IActualizable{
         refrescarTablaVehiculos(ControllerVehiculo.listarVehiculos());
         
         ControllerConductor.registrarGUI(this);
-        //refrescarTablaConductor(ControllerConductor.listarConductor());
+        refrescarTablaConductores(ControllerConductor.listarConductores());
         
         ControllerPasajero.registrarGUI(this);
-        //refrescarTablaPasajero(ControllerPasajero.listarPasajero());
+        refrescarTablaPasajero(ControllerPasajero.listarPasajero());
 
         TblListUsers.getColumnModel().getColumn(7).setCellRenderer(new com.mycompany.rutamatch.view.components.ButtonRenderer());
         TblListUsers.getColumnModel().getColumn(7).setMaxWidth(40);
@@ -1106,22 +1106,21 @@ private void aplicarColumnaAccionesUsuarios() {
             PanelListDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelListDriverLayout.createSequentialGroup()
                 .addGap(26, 26, 26)
-                .addGroup(PanelListDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel58, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(PanelListDriverLayout.createSequentialGroup()
-                        .addComponent(jLabel59)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(TxtSearchTrips3, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(BtnSearchTrips3)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(PanelListDriverLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 840, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(BtnAddTrips3)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(PanelListDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(BtnAddTrips3)
+                    .addGroup(PanelListDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(PanelListDriverLayout.createSequentialGroup()
+                            .addGap(6, 6, 6)
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 840, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel58, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(PanelListDriverLayout.createSequentialGroup()
+                            .addComponent(jLabel59)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(TxtSearchTrips3, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(BtnSearchTrips3))))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
         PanelListDriverLayout.setVerticalGroup(
             PanelListDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1135,14 +1134,11 @@ private void aplicarColumnaAccionesUsuarios() {
                     .addComponent(TxtSearchTrips3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BtnSearchTrips3)
                     .addComponent(jLabel59))
-                .addGroup(PanelListDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(PanelListDriverLayout.createSequentialGroup()
-                        .addGap(273, 273, 273)
-                        .addComponent(BtnAddTrips3))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelListDriverLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(BtnAddTrips3)
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         PanelUsers.add(PanelListDriver, "ListDriver");
@@ -2241,10 +2237,12 @@ private void aplicarColumnaAccionesUsuarios() {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "ListDriver");
+        refrescarTablaConductores(ControllerConductor.listarConductores());
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "ListPassanger");
+        refrescarTablaPasajero(ControllerPasajero.listarPasajero());
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void TxtIDCreatePassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtIDCreatePassActionPerformed
@@ -2605,7 +2603,8 @@ try {
     }//GEN-LAST:event_jButton11ActionPerformed
 
     private void BtnAddTrips2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAddTrips2ActionPerformed
-        // TODO add your handling code here:
+
+        ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "AddPassenger");
     }//GEN-LAST:event_BtnAddTrips2ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
@@ -2613,7 +2612,8 @@ try {
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void BtnAddTrips3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAddTrips3ActionPerformed
-        // TODO add your handling code here:
+        ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "AddDriver");
+    
     }//GEN-LAST:event_BtnAddTrips3ActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed

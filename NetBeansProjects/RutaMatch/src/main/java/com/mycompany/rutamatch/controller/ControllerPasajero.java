@@ -109,6 +109,9 @@ public class ControllerPasajero {
             );
         }
     }
+      public static List<Pasajero> listarPasajero() {
+        return Collections.unmodifiableList(pasajeros);
+    }
 
     public static void actualizar() {
 
