@@ -213,6 +213,10 @@ RutaMatch
 │
 ├── pom.xml
 └── README.md
+
+RutaMatch utiliza una estructura basada en el patrón MVC:
+
+![Diagrama MVC](docs/diagrama-mvc.png)
 ```
 
 ---
