@@ -258,13 +258,15 @@ public class GUIPrincipal extends javax.swing.JFrame implements IActualizable{
             );
             // El ID identifica al conductor, por eso no debería modificarse
             TxtIDEditDriver.setEditable(false);
+            ((java.awt.CardLayout) PanelUsers.getLayout()) .show(PanelUsers, "EditDriver");
+
         },
         row -> { // ELIMINAR
             String id = TblListDrivers.getValueAt(row, 0).toString();
             int confirm = JOptionPane.showConfirmDialog(
                     TblListDrivers,
-                    "¿Seguro que quieres eliminar el conductor " + id + "?",
-                    "Confirmar",
+                     "¿Are you sure you want to remove this passenger? " + id + "?",
+                    "Confirm",
                     JOptionPane.YES_NO_OPTION
             );
             if (confirm == JOptionPane.YES_OPTION) {
@@ -272,7 +274,7 @@ public class GUIPrincipal extends javax.swing.JFrame implements IActualizable{
                     ControllerConductor.eliminarConductor(id);
                     JOptionPane.showMessageDialog(
                             TblListDrivers,
-                            "Conductor eliminado correctamente."
+                            "Driver successfully removed."
                     );
                 } catch (RuntimeException ex) {
                     JOptionPane.showMessageDialog(
@@ -288,57 +290,61 @@ public class GUIPrincipal extends javax.swing.JFrame implements IActualizable{
     
     
     private void mostrarUsuarioEncontrado(Conductor conductor, Pasajero pasajero) {
-        javax.swing.table.DefaultTableModel modelo =
-            new javax.swing.table.DefaultTableModel(
-                new String[]{
-                    "ID", "Nombre", "Apellido", "Documento",
-                    "Tipo Documento", "Teléfono", "Correo",
-                    "Tipo Usuario", ""
-                }, 0) {
+    javax.swing.table.DefaultTableModel modelo =
+        new javax.swing.table.DefaultTableModel(
+            new String[]{
+                "ID", "Nombre", "Apellido", "Documento",
+                "Tipo Documento", "Teléfono", "Correo",
+                "Tipo Usuario", ""
+            }, 0) {
 
-                @Override
-                public boolean isCellEditable(int row, int column) {
-                    return false;
-                }
-            };
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
-        if (conductor != null) {
+    // Agregar conductor si existe
+    if (conductor != null) {
 
-            modelo.addRow(new Object[]{
-                conductor.getId(),
-                conductor.getNombre(),
-                conductor.getApellido(),
-                conductor.getDocumento(),
-                conductor.getTipoDocumento(),
-                conductor.getTelefono(),
-                conductor.getCorreo(),
-                "Driver",
-                ""
-            });
-
-        } else if (pasajero != null) {
-
-            modelo.addRow(new Object[]{
-                pasajero.getId(),
-                pasajero.getNombre(),
-                pasajero.getApellido(),
-                pasajero.getDocumento(),
-                pasajero.getTipoDocumento(),
-                pasajero.getTelefono(),
-                pasajero.getCorreo(),
-                "Passenger",
-                ""
-            });
-        }
-
-        TblListUsers.setModel(modelo);
-        aplicarColumnaAccionesUsuarios();
+        modelo.addRow(new Object[]{
+            conductor.getId(),
+            conductor.getNombre(),
+            conductor.getApellido(),
+            conductor.getDocumento(),
+            conductor.getTipoDocumento(),
+            conductor.getTelefono(),
+            conductor.getCorreo(),
+            "Driver",
+            ""
+        });
     }
 
+    // Agregar pasajero si existe
+    if (pasajero != null) {
+
+        modelo.addRow(new Object[]{
+            pasajero.getId(),
+            pasajero.getNombre(),
+            pasajero.getApellido(),
+            pasajero.getDocumento(),
+            pasajero.getTipoDocumento(),
+            pasajero.getTelefono(),
+            pasajero.getCorreo(),
+            "Passenger",
+            ""
+        });
+    }
+
+    TblListUsers.setModel(modelo);
+    aplicarColumnaAccionesUsuarios();
+}
 @Override
 public void actualizar() {
     refrescarTablaUsuarios();
     refrescarTablaVehiculos(ControllerVehiculo.listarVehiculos());
+    refrescarTablaPasajero(ControllerPasajero.listarPasajero());
+    refrescarTablaConductores(ControllerConductor.listarConductores());
 }
 
 private void aplicarColumnaAccionesUsuarios() {
@@ -946,7 +952,7 @@ private void aplicarColumnaAccionesUsuarios() {
                 .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JFXPanelLayout.createSequentialGroup()
-                .addContainerGap(250, Short.MAX_VALUE)
+                .addContainerGap(264, Short.MAX_VALUE)
                 .addGroup(JFXPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel52)
                     .addGroup(JFXPanelLayout.createSequentialGroup()
@@ -1048,7 +1054,7 @@ private void aplicarColumnaAccionesUsuarios() {
                         .addGroup(PanelListPassangerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(BtnAddTrips2)
                             .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 774, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(118, Short.MAX_VALUE))
+                .addContainerGap(132, Short.MAX_VALUE))
         );
         PanelListPassangerLayout.setVerticalGroup(
             PanelListPassangerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1139,7 +1145,7 @@ private void aplicarColumnaAccionesUsuarios() {
                     .addGroup(PanelListUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(BtnAddUser)
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 792, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(100, Short.MAX_VALUE))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
         PanelListUserLayout.setVerticalGroup(
             PanelListUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1350,7 +1356,7 @@ private void aplicarColumnaAccionesUsuarios() {
                                             .addComponent(jLabel76)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(TxtLastNameCreateDriver))))))
-                        .addGap(0, 491, Short.MAX_VALUE))))
+                        .addGap(0, 505, Short.MAX_VALUE))))
         );
         PanelAddDriverLayout.setVerticalGroup(
             PanelAddDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1494,7 +1500,7 @@ private void aplicarColumnaAccionesUsuarios() {
                         .addComponent(jLabel61, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(TxtDateRegisterEditPass)))
-                .addContainerGap(491, Short.MAX_VALUE))
+                .addContainerGap(505, Short.MAX_VALUE))
         );
         PanelEditPassengerLayout.setVerticalGroup(
             PanelEditPassengerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1642,7 +1648,7 @@ private void aplicarColumnaAccionesUsuarios() {
                         .addComponent(jLabel50)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(TxtIDEditDriver, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 470, Short.MAX_VALUE))
+                .addGap(0, 484, Short.MAX_VALUE))
         );
         PanelEditDriverLayout.setVerticalGroup(
             PanelEditDriverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1780,7 +1786,7 @@ private void aplicarColumnaAccionesUsuarios() {
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(TxtEmailCreatePass)))
-                .addContainerGap(491, Short.MAX_VALUE))
+                .addContainerGap(505, Short.MAX_VALUE))
         );
         PanelAddPassengerLayout.setVerticalGroup(
             PanelAddPassengerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2192,7 +2198,7 @@ private void aplicarColumnaAccionesUsuarios() {
             PanelVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelVehiclesLayout.createSequentialGroup()
                 .addComponent(PanelHomeVehicles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 315, Short.MAX_VALUE))
+                .addGap(0, 329, Short.MAX_VALUE))
         );
         PanelVehiclesLayout.setVerticalGroup(
             PanelVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2391,6 +2397,7 @@ private void aplicarColumnaAccionesUsuarios() {
                 JOptionPane.INFORMATION_MESSAGE
         );
         limpiarCamposAddPass();
+        ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "ListUsers");
 
     } catch (RuntimeException ex) {
 
@@ -2427,6 +2434,33 @@ String Email = TxtEmailEditDriver.getText().trim();
 String License = TxtLicenceEditDriver.getText().trim().toUpperCase();
 String CategoryLicense = TxtLicenceTypeEditDriver.getText().trim();
 String ExpirationLicense = TxtExpDateEditDriver.getText().trim();
+
+
+// Verificar si la licencia está vencida
+try {
+    java.time.LocalDate fechaVencimiento =
+            java.time.LocalDate.parse(ExpirationLicense);
+
+    if (fechaVencimiento.isBefore(java.time.LocalDate.now())) {
+        JOptionPane.showMessageDialog(
+                this,
+                "No se puede actualizar el conductor porque la licencia está vencida.",
+                "Licencia vencida",
+                JOptionPane.ERROR_MESSAGE
+        );
+        return;
+    }
+
+} catch (java.time.format.DateTimeParseException e) {
+    JOptionPane.showMessageDialog(
+            this,
+            "La fecha de vencimiento no es válida.",
+            "Fecha inválida",
+            JOptionPane.ERROR_MESSAGE
+    );
+    return;
+}
+
 
 // Crear objeto actualizado
 Conductor actualizado = new Conductor(
@@ -2467,6 +2501,7 @@ try {
     );
 
     limpiarCamposEditDriver();
+    ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "ListUsers");
 
 } catch (RuntimeException ex) {
 
@@ -2477,6 +2512,7 @@ try {
             JOptionPane.ERROR_MESSAGE
     );
 }
+
     }//GEN-LAST:event_BtnEditDriverActionPerformed
 
     private void TxtLicenceEditDriverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtLicenceEditDriverActionPerformed
@@ -2488,7 +2524,8 @@ try {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+                                       
+    refrescarTablaUsuarios();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -2520,57 +2557,94 @@ try {
     }//GEN-LAST:event_TxtIDCreateDriverActionPerformed
 
     private void BtnCreateDriverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCreateDriverActionPerformed
-         String ID = TxtIDCreateDriver.getText().trim().toUpperCase();
-         String Name = TxtNameCreateDriver.getText().trim();
-         String LastName = TxtLastNameCreateDriver.getText().trim();
-         String Document = TxtDocumentCreateDriver.getText().trim(); // TODO: agregar campo Documento
-         String DocumentType = TxtDocumentTypeCreateDriver.getText().trim();
-         String Phone = TxtPhoneCreateDriver.getText().trim();
-         String Email = TxtEmailCreateDriver.getText().trim();
-         String License = TxtLicenceCreateDriver.getText().trim().toUpperCase();
-         String CategoryLicense = TxtLicenceTypeCreateDriver.getText().trim();
-         String ExpirationLicense = TxtExpDateCreateDriver.getText().trim();
-         // Crear conductor
-         Conductor nuevo = new Conductor(
-                 ID,
-                 Name,
-                 LastName,
-                 Document,
-                 DocumentType,
-                 Phone,
-                 Email,
-                 License,
-                 CategoryLicense,
-                 ExpirationLicense
-         );
-         // Validar los datos
-         String error = nuevo.validarDatosConductor();
-         if (error != null) {
-             JOptionPane.showMessageDialog(
-                     this,
-                     error,
-                     "Datos inválidos",
-                     JOptionPane.ERROR_MESSAGE);
-             return;
-         }
-         try {
-             ControllerConductor.crearConductor(nuevo);
-             JOptionPane.showMessageDialog(
-                     this,
-                     "Conductor creado correctamente.",
-                     "Éxito",
-                     JOptionPane.INFORMATION_MESSAGE
-             );
-             limpiarCamposCreacionDriver();
-             ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "ListUsers");
-         } catch (RuntimeException ex) {
-             JOptionPane.showMessageDialog(
-                     this,
-                     ex.getMessage(),
-                     "Error",
-                     JOptionPane.ERROR_MESSAGE
-             );
-         }
+    String ID = TxtIDCreateDriver.getText().trim().toUpperCase();
+    String Name = TxtNameCreateDriver.getText().trim();
+    String LastName = TxtLastNameCreateDriver.getText().trim();
+    String Document = TxtDocumentCreateDriver.getText().trim();
+    String DocumentType = TxtDocumentTypeCreateDriver.getText().trim();
+    String Phone = TxtPhoneCreateDriver.getText().trim();
+    String Email = TxtEmailCreateDriver.getText().trim();
+    String License = TxtLicenceCreateDriver.getText().trim().toUpperCase();
+    String CategoryLicense = TxtLicenceTypeCreateDriver.getText().trim();
+    String ExpirationLicense = TxtExpDateCreateDriver.getText().trim();
+
+    // Verificar si la licencia está vencida ANTES de crear el conductor
+    try {
+        java.time.LocalDate fechaVencimiento =
+                java.time.LocalDate.parse(ExpirationLicense);
+
+        if (fechaVencimiento.isBefore(java.time.LocalDate.now())) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se puede registrar el conductor porque la licencia está vencida.",
+                    "Licencia vencida",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+    } catch (java.time.format.DateTimeParseException e) {
+        JOptionPane.showMessageDialog(
+                this,
+                "La fecha de vencimiento no es válida.",
+                "Fecha inválida",
+                JOptionPane.ERROR_MESSAGE
+        );
+        return;
+    }
+
+    // Crear conductor
+    Conductor nuevo = new Conductor(
+            ID,
+            Name,
+            LastName,
+            Document,
+            DocumentType,
+            Phone,
+            Email,
+            License,
+            CategoryLicense,
+            ExpirationLicense
+    );
+
+    // Validar los datos
+    String error = nuevo.validarDatosConductor();
+
+    if (error != null) {
+        JOptionPane.showMessageDialog(
+                this,
+                error,
+                "Datos inválidos",
+                JOptionPane.ERROR_MESSAGE
+        );
+        return;
+    }
+
+    try {
+        ControllerConductor.crearConductor(nuevo);
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Conductor creado correctamente.",
+                "Éxito",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        limpiarCamposCreacionDriver();
+        ((java.awt.CardLayout) PanelUsers.getLayout()).show(
+                PanelUsers,
+                "ListUsers"
+        );
+
+    } catch (RuntimeException ex) {
+        JOptionPane.showMessageDialog(
+                this,
+                ex.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+        );
+    }
+
     }//GEN-LAST:event_BtnCreateDriverActionPerformed
 
     private void TxtLicenceCreateDriverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtLicenceCreateDriverActionPerformed
@@ -2775,31 +2849,40 @@ try {
     }//GEN-LAST:event_TxtDateRegisterEditPassActionPerformed
 
     private void BtnSearchTrips1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSearchTrips1ActionPerformed
+
     String id = TxtSearchUser.getText().trim().toUpperCase();
+
     if (id.isBlank()) {
         JOptionPane.showMessageDialog(
             this,
-            "Enter an ID to search.");
+            "Enter an ID to search."
+        );
         return;
     }
+
     // Buscar conductor
     Conductor conductor = ControllerConductor.buscarConductor(id);
-    if (conductor != null) {
-        mostrarUsuarioEncontrado(conductor, null);
-        return;
-    }
+
     // Buscar pasajero
     Pasajero pasajero = ControllerPasajero.buscarPasajero(id);
-    if (pasajero != null) {
-        mostrarUsuarioEncontrado(null, pasajero);
+
+    // Si no existe ninguno
+    if (conductor == null && pasajero == null) {
+
+        JOptionPane.showMessageDialog(
+            this,
+            "No user with the ID " + id + " was found."
+        );
+
+        refrescarTablaUsuarios();
         return;
     }
-    // No encontrado
-    JOptionPane.showMessageDialog(
-        this,
-        "No user with the ID " + id + " was found."
-    );
-    refrescarTablaUsuarios();
+
+    // Mostrar todos los usuarios encontrados con ese ID
+    mostrarUsuarioEncontrado(conductor, pasajero);
+
+    
+   
     }//GEN-LAST:event_BtnSearchTrips1ActionPerformed
 
     private void BtnSearchTrips3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSearchTrips3ActionPerformed

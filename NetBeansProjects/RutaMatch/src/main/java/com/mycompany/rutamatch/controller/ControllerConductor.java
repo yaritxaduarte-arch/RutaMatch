@@ -9,6 +9,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 import com.mycompany.rutamatch.modelo.Conductor;
 import com.mycompany.rutamatch.modelo.IActualizable;
 
@@ -26,6 +30,9 @@ public class ControllerConductor {
             guiActualiza.add(gui);
         }
     }
+    
+    
+    
     
     public static void crearConductor(Conductor conductor) throws RuntimeException {
         if (conductor == null || !conductor.validarConductor()) {
@@ -73,6 +80,9 @@ public class ControllerConductor {
         }
         throw new RuntimeException("No se encontró ningún conductor con ese ID.");
     }
+    
+    
+    
     
     public static void actualizar() {
         for (IActualizable act : guiActualiza) {
