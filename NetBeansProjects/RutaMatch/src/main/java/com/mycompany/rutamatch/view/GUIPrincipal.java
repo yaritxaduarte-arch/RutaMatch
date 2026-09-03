@@ -19,22 +19,53 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import java.awt.BorderLayout;
+import com.toedter.calendar.JDateChooser;
+import java.text.SimpleDateFormat;
 import com.mycompany.rutamatch.modelo.IActualizable;
+import com.toedter.calendar.JDateChooser;
+import java.text.SimpleDateFormat;
+
+
 public class GUIPrincipal extends javax.swing.JFrame implements IActualizable{
 
     private CardLayout cardLayout;
-    //no se para que es pero claudia me dijo que lo pusiera para poder correrlo
     private static final java.util.logging.Logger logger = 
         java.util.logging.Logger.getLogger(GUIPrincipal.class.getName());
 
     public GUIPrincipal() {
          initComponents();
+         
+         //Para mostrar el calendario para elegir las fechas en crear/editar en pasajero y conductor
+         TxtExpDateCreateDriver.addMouseListener(new java.awt.event.MouseAdapter() {
+             @Override
+             public void mouseClicked(java.awt.event.MouseEvent evt) {
+                 seleccionarFecha(TxtExpDateCreateDriver);
+             }
+         });
+
+         TxtExpDateEditDriver.addMouseListener(new java.awt.event.MouseAdapter() {
+             @Override
+             public void mouseClicked(java.awt.event.MouseEvent evt) {
+                 seleccionarFecha(TxtExpDateEditDriver);
+             }
+         });
+
+         TxtDateRegisterEditPass.addMouseListener(new java.awt.event.MouseAdapter() {
+             @Override
+             public void mouseClicked(java.awt.event.MouseEvent evt) {
+                 seleccionarFecha(TxtDateRegisterEditPass);
+             }
+         });
+         
+         
          iniciarVideo();
         cardLayout = new CardLayout();
          
         ((java.awt.CardLayout) PanelHomeVehicles.getLayout()).show(PanelHomeVehicles, "ListVehicles");
         ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "ListUsers");
         
+        
+        //Lista Automaticamente las tablas esto lo hace llamando a los controllers
         ControllerVehiculo.registrarGUI(this);
         refrescarTablaVehiculos(ControllerVehiculo.listarVehiculos());
         
@@ -44,6 +75,7 @@ public class GUIPrincipal extends javax.swing.JFrame implements IActualizable{
         ControllerPasajero.registrarGUI(this);
         refrescarTablaPasajero(ControllerPasajero.listarPasajero());
 
+        
         TblListUsers.getColumnModel().getColumn(7).setCellRenderer(new com.mycompany.rutamatch.view.components.ButtonRenderer());
         TblListUsers.getColumnModel().getColumn(7).setMaxWidth(40);
         
@@ -60,7 +92,7 @@ public class GUIPrincipal extends javax.swing.JFrame implements IActualizable{
         public boolean isCellEditable(int row, int column) {
             return false;
         }
-    };
+        };
 
     for (Conductor c : ControllerConductor.listarConductores()) {
         modelo.addRow(new Object[]{
@@ -92,11 +124,221 @@ public class GUIPrincipal extends javax.swing.JFrame implements IActualizable{
 
     TblListUsers.setModel(modelo);
     aplicarColumnaAccionesUsuarios();
+    }
+    
+    private void refrescarTablaPasajero(java.util.List<Pasajero> lista) {
+        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
+            new String[]{"ID", "Name", "LastName", "Document", "DocumentType", "Phone", "Email", ""}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        for (Pasajero p : lista) {
+            modelo.addRow(new Object[]{
+                p.getId(), p.getNombre(), p.getApellido(), p.getDocumento(),
+                p.getTipoDocumento(), p.getTelefono(), p.getCorreo(), ""
+            });
+        }
+        TblListPassanger.setModel(modelo);
+        aplicarColumnaAccionesPasajeros();
+    }  
+    
+    
+    private void refrescarTablaConductores(java.util.List<Conductor> lista) {
+    javax.swing.table.DefaultTableModel modelo =
+        new javax.swing.table.DefaultTableModel(
+            new String[]{
+                "ID", "Nombre", "Apellido", "Documento",
+                "Tipo Documento", "Teléfono", "Correo",
+                "Licencia", "Categoría", "Vencimiento", ""
+            }, 0) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+    for (Conductor c : lista) {
+        modelo.addRow(new Object[]{
+            c.getId(),
+            c.getNombre(),
+            c.getApellido(),
+            c.getDocumento(),
+            c.getTipoDocumento(),
+            c.getTelefono(),
+            c.getCorreo(),
+            c.getLicencia(),
+            c.getCategoriaLicencia(),
+            c.getFechaVenciLicencia(),
+            ""
+        });
+    }
+    TblListDrivers.setModel(modelo);
+
+    aplicarColumnaAccionesConductores();
 }
+ 
+    private void refrescarTablaVehiculos(java.util.List<Vehiculo> lista) {
+        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
+            new String[]{"Placa", "Marca", "Modelo", "Año", "Color", "Combustible", "Chasis", ""}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        for (Vehiculo v : lista) {
+            modelo.addRow(new Object[]{
+                v.getPlaca(), v.getMarca(), v.getModelo(), v.getAnio(),
+                v.getColor(), v.getTipoCombustible(), v.getNumeroChasis(), ""
+            });
+        }
+        TblVehicles.setModel(modelo);
+        aplicarColumnaAccionesVehiculos();
+    }
+    
+    private void seleccionarFecha(javax.swing.JTextField campo) {
+        JDateChooser calendario = new JDateChooser();
+        calendario.setDateFormatString("yyyy-MM-dd");
+        int opcion = JOptionPane.showConfirmDialog(
+            this,
+            calendario,
+            "Seleccionar fecha",
+            JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (opcion == JOptionPane.OK_OPTION && calendario.getDate() != null) {
+
+            SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+
+            campo.setText(formato.format(calendario.getDate()));
+        }
+    }
+    
+    private void aplicarColumnaAccionesConductores() {
+    TblListDrivers.getColumnModel().getColumn(10)
+            .setCellRenderer(new ButtonRenderer());
+    TblListDrivers.getColumnModel().getColumn(10)
+            .setMaxWidth(40);
+    TableOptionsHelper.configurarClicOpciones(
+        TblListDrivers,10,
+            
+        row -> { // EDITAR
+            TxtIDEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 0).toString()
+            );
+            TxtNameEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 1).toString()
+            );
+            TxtLastNameEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 2).toString()
+            );
+            TxtDocumentEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 3).toString()
+            );
+            TxtDocumentTypeEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 4).toString()
+            );
+            TxtPhoneEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 5).toString()
+            );
+            TxtEmailEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 6).toString()
+            );
+            TxtLicenceEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 7).toString()
+            );
+
+            TxtLicenceTypeEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 8).toString()
+            );
+
+            TxtExpDateEditDriver.setText(
+                    TblListDrivers.getValueAt(row, 9).toString()
+            );
+            // El ID identifica al conductor, por eso no debería modificarse
+            TxtIDEditDriver.setEditable(false);
+        },
+        row -> { // ELIMINAR
+            String id = TblListDrivers.getValueAt(row, 0).toString();
+            int confirm = JOptionPane.showConfirmDialog(
+                    TblListDrivers,
+                    "¿Seguro que quieres eliminar el conductor " + id + "?",
+                    "Confirmar",
+                    JOptionPane.YES_NO_OPTION
+            );
+            if (confirm == JOptionPane.YES_OPTION) {
+                try {
+                    ControllerConductor.eliminarConductor(id);
+                    JOptionPane.showMessageDialog(
+                            TblListDrivers,
+                            "Conductor eliminado correctamente."
+                    );
+                } catch (RuntimeException ex) {
+                    JOptionPane.showMessageDialog(
+                            TblListDrivers,
+                            ex.getMessage()
+                        );
+                    }
+                }
+            }
+        );
+    }
+   
+    
+    
+    private void mostrarUsuarioEncontrado(Conductor conductor, Pasajero pasajero) {
+        javax.swing.table.DefaultTableModel modelo =
+            new javax.swing.table.DefaultTableModel(
+                new String[]{
+                    "ID", "Nombre", "Apellido", "Documento",
+                    "Tipo Documento", "Teléfono", "Correo",
+                    "Tipo Usuario", ""
+                }, 0) {
+
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+
+        if (conductor != null) {
+
+            modelo.addRow(new Object[]{
+                conductor.getId(),
+                conductor.getNombre(),
+                conductor.getApellido(),
+                conductor.getDocumento(),
+                conductor.getTipoDocumento(),
+                conductor.getTelefono(),
+                conductor.getCorreo(),
+                "Driver",
+                ""
+            });
+
+        } else if (pasajero != null) {
+
+            modelo.addRow(new Object[]{
+                pasajero.getId(),
+                pasajero.getNombre(),
+                pasajero.getApellido(),
+                pasajero.getDocumento(),
+                pasajero.getTipoDocumento(),
+                pasajero.getTelefono(),
+                pasajero.getCorreo(),
+                "Passenger",
+                ""
+            });
+        }
+
+        TblListUsers.setModel(modelo);
+        aplicarColumnaAccionesUsuarios();
+    }
 
 @Override
 public void actualizar() {
     refrescarTablaUsuarios();
+    refrescarTablaVehiculos(ControllerVehiculo.listarVehiculos());
 }
 
 private void aplicarColumnaAccionesUsuarios() {
@@ -148,7 +390,6 @@ private void aplicarColumnaAccionesUsuarios() {
                     TxtTypeDocumentEditPass.setText(pasajero.getTipoDocumento());
                     TxtPhoneEditPass.setText(pasajero.getTelefono());
                     TxtEmailEditPass.setText(pasajero.getCorreo());
-
                     TxtDateRegisterEditPass.setText(pasajero.getFechaRegistro());
 
                     TxtIDEditPass.setEditable(false);
@@ -199,160 +440,14 @@ private void aplicarColumnaAccionesUsuarios() {
         }
     );
 }
-    private void refrescarTablaConductores(java.util.List<Conductor> lista) {
-
-    javax.swing.table.DefaultTableModel modelo =
-        new javax.swing.table.DefaultTableModel(
-            new String[]{
-                "ID", "Nombre", "Apellido", "Documento",
-                "Tipo Documento", "Teléfono", "Correo",
-                "Licencia", "Categoría", "Vencimiento", ""
-            }, 0) {
-
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return false;
-        }
-    };
-
-    for (Conductor c : lista) {
-
-        modelo.addRow(new Object[]{
-            c.getId(),
-            c.getNombre(),
-            c.getApellido(),
-            c.getDocumento(),
-            c.getTipoDocumento(),
-            c.getTelefono(),
-            c.getCorreo(),
-            c.getLicencia(),
-            c.getCategoriaLicencia(),
-            c.getFechaVenciLicencia(),
-            ""
-        });
-    }
-
-    TblListDrivers.setModel(modelo);
-
-    aplicarColumnaAccionesConductores();
-}
-    private void aplicarColumnaAccionesConductores() {
-
-    TblListDrivers.getColumnModel().getColumn(10)
-            .setCellRenderer(new ButtonRenderer());
-
-    TblListDrivers.getColumnModel().getColumn(10)
-            .setMaxWidth(40);
-
-    TableOptionsHelper.configurarClicOpciones(
-        TblListDrivers,
-        10,
-
-        row -> { // EDITAR
-
-            TxtIDEditDriver.setText(
-                    TblListDrivers.getValueAt(row, 0).toString()
-            );
-
-            TxtNameEditDriver.setText(
-                    TblListDrivers.getValueAt(row, 1).toString()
-            );
-
-            TxtLastNameEditDriver.setText(
-                    TblListDrivers.getValueAt(row, 2).toString()
-            );
-
-            TxtDocumentEditDriver.setText(
-                    TblListDrivers.getValueAt(row, 3).toString()
-            );
-
-            TxtDocumentTypeEditDriver.setText(
-                    TblListDrivers.getValueAt(row, 4).toString()
-            );
-
-            TxtPhoneEditDriver.setText(
-                    TblListDrivers.getValueAt(row, 5).toString()
-            );
-
-            TxtEmailEditDriver.setText(
-                    TblListDrivers.getValueAt(row, 6).toString()
-            );
-
-            TxtLicenceEditDriver.setText(
-                    TblListDrivers.getValueAt(row, 7).toString()
-            );
-
-            TxtExpDateEditDriver.setText(
-                    TblListDrivers.getValueAt(row, 8).toString()
-            );
-
-            TxtExpDateEditDriver.setText(
-                    TblListDrivers.getValueAt(row, 9).toString()
-            );
-
-            // El ID identifica al conductor, por eso no debería modificarse
-            TxtIDEditDriver.setEditable(false);
-
-           
-        },
-
-        row -> { // ELIMINAR
-
-            String id = TblListDrivers.getValueAt(row, 0).toString();
-
-            int confirm = JOptionPane.showConfirmDialog(
-                    TblListDrivers,
-                    "¿Seguro que quieres eliminar el conductor " + id + "?",
-                    "Confirmar",
-                    JOptionPane.YES_NO_OPTION
-            );
-
-            if (confirm == JOptionPane.YES_OPTION) {
-
-                try {
-
-                    ControllerConductor.eliminarConductor(id);
-
-                    JOptionPane.showMessageDialog(
-                            TblListDrivers,
-                            "Conductor eliminado correctamente."
-                    );
-
-                } catch (RuntimeException ex) {
-
-                    JOptionPane.showMessageDialog(
-                            TblListDrivers,
-                            ex.getMessage()
-                    );
-                }
-            }
-        }
-    );
-}
     
-    private void refrescarTablaPasajero(java.util.List<Pasajero> lista) {
-        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
-            new String[]{"ID", "Name", "LastName", "Document", "DocumentType", "Phone", "Email", ""}, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        for (Pasajero p : lista) {
-            modelo.addRow(new Object[]{
-                p.getId(), p.getNombre(), p.getApellido(), p.getDocumento(),
-                p.getTipoDocumento(), p.getTelefono(), p.getCorreo(), ""
-            });
-        }
-        TblListPassanger.setModel(modelo);
-        aplicarColumnaAccionesPasajeros();
-        }  
+    
     
     private void aplicarColumnaAccionesPasajeros() {
         TblListPassanger.getColumnModel().getColumn(7).setCellRenderer(new ButtonRenderer());
         TblListPassanger.getColumnModel().getColumn(7).setMaxWidth(40);
 
-        TableOptionsHelper.configurarClicOpciones(TblVehicles, 7,
+        TableOptionsHelper.configurarClicOpciones(TblListPassanger, 7,
             row -> { // Edit
                 TxtIDEditPass.setText(TblListPassanger.getValueAt(row, 0).toString());
                 TxtNameEditPass.setText(TblListPassanger.getValueAt(row, 1).toString());
@@ -364,12 +459,12 @@ private void aplicarColumnaAccionesUsuarios() {
                 ((java.awt.CardLayout) PanelUsers.getLayout()) .show(PanelUsers, "EditPassenger"); },
             row -> { // Delete
                 String document = TblListPassanger.getValueAt(row, 0).toString();
-                int confirm = JOptionPane.showConfirmDialog(TblVehicles,
+                int confirm = JOptionPane.showConfirmDialog(TblListPassanger,
                         "¿Are you sure you want to remove this passenger? " + document + "?",
                         "Confirm", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) {
                     try {
-                        ControllerVehiculo.eliminarVehiculo(document);
+                        ControllerPasajero.eliminarPasajero(document);
                         JOptionPane.showMessageDialog(TblListPassanger, "Passenger successfully removed.");
                     } catch (RuntimeException ex) {
                         JOptionPane.showMessageDialog(TblListPassanger, ex.getMessage());
@@ -380,23 +475,7 @@ private void aplicarColumnaAccionesUsuarios() {
     }
     
       
-    private void refrescarTablaVehiculos(java.util.List<Vehiculo> lista) {
-        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(
-            new String[]{"Placa", "Marca", "Modelo", "Año", "Color", "Combustible", "Chasis", ""}, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        for (Vehiculo v : lista) {
-            modelo.addRow(new Object[]{
-                v.getPlaca(), v.getMarca(), v.getModelo(), v.getAnio(),
-                v.getColor(), v.getTipoCombustible(), v.getNumeroChasis(), ""
-            });
-        }
-        TblVehicles.setModel(modelo);
-        aplicarColumnaAccionesVehiculos();
-        }
+   
     
    
     private void aplicarColumnaAccionesVehiculos() {
@@ -473,7 +552,7 @@ private void aplicarColumnaAccionesUsuarios() {
     return null; // todo válido
 }
     
-    private void limpiarCamposCreacion() {
+    private void limpiarCamposCreacionVehiculo() {
     TxtAddPlate.setText("");
     TxtAddBrand.setText("");
     TxtAddModel.setText("");
@@ -483,7 +562,19 @@ private void aplicarColumnaAccionesUsuarios() {
     TxtAddYear.setText("");
  
 }
-    
+    private void limpiarCamposCreacionDriver() {
+    TxtIDCreateDriver.setText("");
+    TxtNameCreateDriver.setText("");
+    TxtLastNameCreateDriver.setText("");
+    TxtDocumentCreateDriver.setText("");
+    TxtDocumentTypeCreateDriver.setText("");
+    TxtPhoneCreateDriver.setText("");
+    TxtEmailCreateDriver.setText("");
+    TxtLicenceCreateDriver.setText("");
+    TxtLicenceTypeCreateDriver.setText("");
+    TxtExpDateCreateDriver.setText("");
+}
+
     public void limpiarCamposEditDriver() {
     TxtIDEditDriver.setText("");
     TxtNameEditDriver.setText("");
@@ -496,12 +587,10 @@ private void aplicarColumnaAccionesUsuarios() {
     TxtLicenceTypeEditDriver.setText("");
     TxtExpDateEditDriver.setText("");
     
-    // Coloca el foco de escritura en el primer campo automáticamente
-    TxtIDEditDriver.requestFocus();
 }
 
     
-    public void limpiarCamposAddPass() {
+    public void limpiarCamposEditPass() {
     TxtIDEditPass.setText("");
     TxtNameEditPass.setText("");
     TxtLastNameEditPass.setText("");
@@ -511,8 +600,17 @@ private void aplicarColumnaAccionesUsuarios() {
     TxtEmailEditPass.setText("");
     TxtDateRegisterEditPass.setText("");
     }
-    
-    private void limpiarCamposEdicion() {
+    public void limpiarCamposAddPass() {
+        TxtIDCreatePass.setText("");
+        TxtNameCreatePass.setText("");
+        TxtLastNameCreatePass.setText("");
+        TxtDocumentCreatePass.setText("");
+        TxtTypeDocumentCreatePass.setText("");
+        TxtPhoneCreatePass.setText("");
+        TxtEmailCreatePass.setText("");
+        }
+            
+    private void limpiarCamposEdicionVehiculo() {
     TxtChangePlate.setText("");
     TxtChangeBrand.setText("");
     TxtChangeModel.setText("");
@@ -582,7 +680,7 @@ private void aplicarColumnaAccionesUsuarios() {
         PanelListUser = new javax.swing.JPanel();
         jLabel42 = new javax.swing.JLabel();
         jLabel43 = new javax.swing.JLabel();
-        TxtSearchTrips1 = new javax.swing.JTextField();
+        TxtSearchUser = new javax.swing.JTextField();
         BtnSearchTrips1 = new javax.swing.JButton();
         BtnAddUser = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -740,7 +838,6 @@ private void aplicarColumnaAccionesUsuarios() {
         jScrollPane2 = new javax.swing.JScrollPane();
         TblVehicles = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
-        btnList = new javax.swing.JButton();
 
         jInternalFrame1.setVisible(true);
 
@@ -893,7 +990,10 @@ private void aplicarColumnaAccionesUsuarios() {
 
         jLabel57.setText("Search: ");
 
+        TxtSearchTrips2.addActionListener(this::TxtSearchTrips2ActionPerformed);
+
         BtnSearchTrips2.setText("Search");
+        BtnSearchTrips2.addActionListener(this::BtnSearchTrips2ActionPerformed);
 
         BtnAddTrips2.setText("Add");
         BtnAddTrips2.addActionListener(this::BtnAddTrips2ActionPerformed);
@@ -978,6 +1078,7 @@ private void aplicarColumnaAccionesUsuarios() {
         jLabel43.setText("Search: ");
 
         BtnSearchTrips1.setText("Search");
+        BtnSearchTrips1.addActionListener(this::BtnSearchTrips1ActionPerformed);
 
         BtnAddUser.setText("Add");
         BtnAddUser.addActionListener(this::BtnAddUserActionPerformed);
@@ -1026,7 +1127,7 @@ private void aplicarColumnaAccionesUsuarios() {
                     .addGroup(PanelListUserLayout.createSequentialGroup()
                         .addComponent(jLabel43)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(TxtSearchTrips1, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(TxtSearchUser, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(BtnSearchTrips1))
                     .addGroup(PanelListUserLayout.createSequentialGroup()
@@ -1052,7 +1153,7 @@ private void aplicarColumnaAccionesUsuarios() {
                     .addComponent(jButton4))
                 .addGap(20, 20, 20)
                 .addGroup(PanelListUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TxtSearchTrips1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TxtSearchUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BtnSearchTrips1)
                     .addComponent(jLabel43))
                 .addGap(18, 18, 18)
@@ -1071,6 +1172,7 @@ private void aplicarColumnaAccionesUsuarios() {
         jLabel59.setText("Search: ");
 
         BtnSearchTrips3.setText("Search");
+        BtnSearchTrips3.addActionListener(this::BtnSearchTrips3ActionPerformed);
 
         BtnAddTrips3.setText("Add");
         BtnAddTrips3.addActionListener(this::BtnAddTrips3ActionPerformed);
@@ -2041,9 +2143,6 @@ private void aplicarColumnaAccionesUsuarios() {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         jLabel5.setText("Add a new vehicle here:");
 
-        btnList.setText("List");
-        btnList.addActionListener(this::btnListActionPerformed);
-
         javax.swing.GroupLayout PanelListVehiclesLayout = new javax.swing.GroupLayout(PanelListVehicles);
         PanelListVehicles.setLayout(PanelListVehiclesLayout);
         PanelListVehiclesLayout.setHorizontalGroup(
@@ -2063,8 +2162,7 @@ private void aplicarColumnaAccionesUsuarios() {
                             .addComponent(jLabel5)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(BtnCreateVehicle))
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnList)))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(44, Short.MAX_VALUE))
         );
         PanelListVehiclesLayout.setVerticalGroup(
@@ -2083,9 +2181,7 @@ private void aplicarColumnaAccionesUsuarios() {
                 .addGroup(PanelListVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BtnCreateVehicle)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnList, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(203, 203, 203))
+                .addGap(228, 228, 228))
         );
 
         PanelHomeVehicles.add(PanelListVehicles, "ListVehicles");
@@ -2154,12 +2250,13 @@ private void aplicarColumnaAccionesUsuarios() {
                 JOptionPane.showMessageDialog(this, error, "Datos inválidos", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
             try {
                 Vehiculo nuevo = new Vehiculo(placa, Integer.parseInt(anioTexto), marca, modelo, color, tipoCombustible, numeroChasis);
                 ControllerVehiculo.crearVehiculo(nuevo);
                 JOptionPane.showMessageDialog(this, "Vehículo creado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                limpiarCamposCreacion();
+                limpiarCamposCreacionVehiculo();
+                java.awt.CardLayout cl = (java.awt.CardLayout) PanelHomeVehicles.getLayout();
+                cl.show(PanelHomeVehicles, "ListVehicles"); 
             } catch (RuntimeException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -2200,7 +2297,9 @@ private void aplicarColumnaAccionesUsuarios() {
         Vehiculo actualizado = new Vehiculo(placa, Integer.parseInt(anioTexto), marca, modelo, color, tipoCombustible, numeroChasis);
         ControllerVehiculo.modificarVehiculo(actualizado);
         JOptionPane.showMessageDialog(this, "Vehículo actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-        limpiarCamposEdicion();
+        limpiarCamposEdicionVehiculo();
+        java.awt.CardLayout cl = (java.awt.CardLayout) PanelHomeVehicles.getLayout();
+        cl.show(PanelHomeVehicles, "ListVehicles"); 
     } catch (RuntimeException ex) {
         JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }  
@@ -2257,10 +2356,8 @@ private void aplicarColumnaAccionesUsuarios() {
     String DocumentType = TxtTypeDocumentCreatePass.getText().trim();
     String Phone = TxtPhoneCreatePass.getText().trim();
     String Email = TxtEmailCreatePass.getText().trim();
-
     // Fecha de registro automática
     String fechaRegistro = java.time.LocalDate.now().toString();
-
     // Crear pasajero
     Pasajero nuevo = new Pasajero(
             Name,
@@ -2272,10 +2369,8 @@ private void aplicarColumnaAccionesUsuarios() {
             ID,
             fechaRegistro
     );
-
     // Validar los datos
     Boolean error = nuevo.validarDatosPasajero();
-
     if (error != true) {
         JOptionPane.showMessageDialog(
                 this,
@@ -2285,7 +2380,6 @@ private void aplicarColumnaAccionesUsuarios() {
         );
         return;
     }
-
     try {
 
         ControllerPasajero.crearPasajero(nuevo);
@@ -2296,8 +2390,7 @@ private void aplicarColumnaAccionesUsuarios() {
                 "Éxito",
                 JOptionPane.INFORMATION_MESSAGE
         );
-
-        limpiarCamposCreacion();
+        limpiarCamposAddPass();
 
     } catch (RuntimeException ex) {
 
@@ -2429,16 +2522,14 @@ try {
     private void BtnCreateDriverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCreateDriverActionPerformed
          String ID = TxtIDCreateDriver.getText().trim().toUpperCase();
          String Name = TxtNameCreateDriver.getText().trim();
-         String LastName = ""; // TODO: agregar campo Apellido
-         String Document = TxtIDCreateDriver.getText().trim(); // TODO: agregar campo Documento
-         String DocumentType = "CC"; // TODO: agregar campo TipoDocumento
+         String LastName = TxtLastNameCreateDriver.getText().trim();
+         String Document = TxtDocumentCreateDriver.getText().trim(); // TODO: agregar campo Documento
+         String DocumentType = TxtDocumentTypeCreateDriver.getText().trim();
          String Phone = TxtPhoneCreateDriver.getText().trim();
          String Email = TxtEmailCreateDriver.getText().trim();
-
          String License = TxtLicenceCreateDriver.getText().trim().toUpperCase();
          String CategoryLicense = TxtLicenceTypeCreateDriver.getText().trim();
          String ExpirationLicense = TxtExpDateCreateDriver.getText().trim();
-
          // Crear conductor
          Conductor nuevo = new Conductor(
                  ID,
@@ -2452,35 +2543,27 @@ try {
                  CategoryLicense,
                  ExpirationLicense
          );
-
          // Validar los datos
          String error = nuevo.validarDatosConductor();
-
          if (error != null) {
              JOptionPane.showMessageDialog(
                      this,
                      error,
                      "Datos inválidos",
-                     JOptionPane.ERROR_MESSAGE
-             );
+                     JOptionPane.ERROR_MESSAGE);
              return;
          }
-
          try {
-
              ControllerConductor.crearConductor(nuevo);
-
              JOptionPane.showMessageDialog(
                      this,
                      "Conductor creado correctamente.",
                      "Éxito",
                      JOptionPane.INFORMATION_MESSAGE
              );
-
-             limpiarCamposCreacion();
-
+             limpiarCamposCreacionDriver();
+             ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "ListUsers");
          } catch (RuntimeException ex) {
-
              JOptionPane.showMessageDialog(
                      this,
                      ex.getMessage(),
@@ -2586,7 +2669,8 @@ try {
     try { 
         ControllerPasajero.modificarPasajero(actualizado); 
         JOptionPane.showMessageDialog(this, "Pasajero actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE); 
-        limpiarCamposAddPass(); 
+        limpiarCamposEditPass(); 
+        ((java.awt.CardLayout) PanelUsers.getLayout()).show(PanelUsers, "ListUsers");
     } catch (RuntimeException ex) { 
         JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
     } 
@@ -2656,10 +2740,6 @@ try {
         // TODO add your handling code here:
     }//GEN-LAST:event_TxtAddYearActionPerformed
 
-    private void btnListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListActionPerformed
-        refrescarTablaVehiculos(ControllerVehiculo.listarVehiculos());
-    }//GEN-LAST:event_btnListActionPerformed
-
     private void BtnSearchVehiclesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSearchVehiclesActionPerformed
         String placa = TxtSearchVehicles.getText().trim().toUpperCase() ;
 
@@ -2693,6 +2773,71 @@ try {
     private void TxtDateRegisterEditPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtDateRegisterEditPassActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_TxtDateRegisterEditPassActionPerformed
+
+    private void BtnSearchTrips1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSearchTrips1ActionPerformed
+    String id = TxtSearchUser.getText().trim().toUpperCase();
+    if (id.isBlank()) {
+        JOptionPane.showMessageDialog(
+            this,
+            "Enter an ID to search.");
+        return;
+    }
+    // Buscar conductor
+    Conductor conductor = ControllerConductor.buscarConductor(id);
+    if (conductor != null) {
+        mostrarUsuarioEncontrado(conductor, null);
+        return;
+    }
+    // Buscar pasajero
+    Pasajero pasajero = ControllerPasajero.buscarPasajero(id);
+    if (pasajero != null) {
+        mostrarUsuarioEncontrado(null, pasajero);
+        return;
+    }
+    // No encontrado
+    JOptionPane.showMessageDialog(
+        this,
+        "No user with the ID " + id + " was found."
+    );
+    refrescarTablaUsuarios();
+    }//GEN-LAST:event_BtnSearchTrips1ActionPerformed
+
+    private void BtnSearchTrips3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSearchTrips3ActionPerformed
+        String id = TxtSearchTrips3.getText().trim().toUpperCase() ;
+    if (id.isBlank()) {
+        JOptionPane.showMessageDialog(this, "Enter a ID to search.");
+        return;
+    }
+    Conductor encontrado = ControllerConductor.buscarConductor(id);
+    if (encontrado != null) {
+        refrescarTablaConductores(java.util.List.of(encontrado));
+    } else {
+        JOptionPane.showMessageDialog(this, "No driver with that ID was found. " + id);
+        refrescarTablaVehiculos(java.util.List.of());
+    }
+    }//GEN-LAST:event_BtnSearchTrips3ActionPerformed
+
+    private void BtnSearchTrips2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSearchTrips2ActionPerformed
+        String id = TxtSearchTrips2.getText().trim().toUpperCase() ;
+
+    if (id.isBlank()) {
+        JOptionPane.showMessageDialog(this, "Enter a ID to search.");
+        return;
+    }
+
+    Pasajero encontrado = ControllerPasajero.buscarPasajero(id);
+
+    if (encontrado != null) {
+        refrescarTablaPasajero(java.util.List.of(encontrado));
+    } else {
+        JOptionPane.showMessageDialog(this, "No pasagger with that ID was found. " + id);
+        refrescarTablaVehiculos(java.util.List.of());
+    }
+    }//GEN-LAST:event_BtnSearchTrips2ActionPerformed
+
+    private void TxtSearchTrips2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtSearchTrips2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtSearchTrips2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -2803,13 +2948,12 @@ try {
     private javax.swing.JTextField TxtPhoneCreatePass;
     private javax.swing.JTextField TxtPhoneEditDriver;
     private javax.swing.JTextField TxtPhoneEditPass;
-    private javax.swing.JTextField TxtSearchTrips1;
     private javax.swing.JTextField TxtSearchTrips2;
     private javax.swing.JTextField TxtSearchTrips3;
+    private javax.swing.JTextField TxtSearchUser;
     private javax.swing.JTextField TxtSearchVehicles;
     private javax.swing.JTextField TxtTypeDocumentCreatePass;
     private javax.swing.JTextField TxtTypeDocumentEditPass;
-    private javax.swing.JButton btnList;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;

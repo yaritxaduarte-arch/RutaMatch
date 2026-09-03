@@ -28,7 +28,9 @@ public class Pasajero extends Persona {
 
         return true; // Si pasa el "if", los datos son válidos
     } // 
-
+    public boolean validarPasajero() {
+    return validarDatosPasajero();
+}
     
     @Override
     public String toString() {

@@ -24,3 +24,4 @@ public class RutaMatch {
         gui.setVisible(true);
     }
 }
+//cosas por hacer: El iactualizable de vehiculo Limpiar los datos después de que se vuelva ingrersar un pasajero y conductor NO VERIFICA QUE EL TIPO DE DOCUMENTO SEA NUMERO
